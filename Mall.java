@@ -9,12 +9,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 public class Mall
 {
-  int[][] stores = new int[5][10];
+  public int[][] stores = new int[34][19];
   private BufferedImage img = null;
   public Mall()
   {
+    
+    stores[0][0] = 123;
+    stores[0][1] = 123;
+    stores[0][2] = 123;
+    System.out.println(stores[(mouseX/38)+1][(mouseY/38)+1]);
     try {
-      img = ImageIO.read(new File("DEMO2.png"));
+      img = ImageIO.read(new File("MALL1.png"));
     } catch (IOException e) 
     {
       System.out.println("NO IMG");
@@ -23,6 +28,7 @@ public class Mall
   
   public void allocateStoreSlot()
   {
+    
   }
   
   public void paint(Graphics2D g2d)
