@@ -25,6 +25,7 @@ public class MallKing extends JPanel
   private static int mouseY;
   private static boolean playGame;
   private static boolean loadGame;
+  private static boolean options;
   private static int cash;
   private static int year;
   private static int month;
@@ -54,18 +55,28 @@ public class MallKing extends JPanel
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           playGame=true;
-          System.out.println("PLAY");
+          //System.out.println("PLAY");
         }
         if((mouseX>=510&&mouseX<=770&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           loadGame=true;
-          System.out.println("LOAD");
+          //System.out.println("LOAD");
         }
         if((mouseX>=805&&mouseX<=1070&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
+          options=true;
           System.out.println("OPTIONS");
         }
+        if(mallstore[clickX][clickY]==805)
+        {
+          save();
+        }
+        if(mallstore[clickX][clickY]==806)
+        {
+          //settings();
+        }
       }      
+      
     }); 
     try { 
       FileReader fr = new FileReader("StoreList.txt"); 
@@ -83,6 +94,7 @@ public class MallKing extends JPanel
     catch(IOException e) 
     {
     }
+    
   }
   
   public void loading()
@@ -102,8 +114,25 @@ public class MallKing extends JPanel
     {
     }
     loadGame=false;
-    playGame=true;
-    
+    playGame=true; 
+  }
+  
+  public void save()
+  {
+    try { 
+      FileWriter fw = new FileWriter("save1.txt"); 
+      PrintWriter pw = new PrintWriter(fw);
+      pw.println(cash);
+      pw.println(year);
+      pw.println(month);
+      pw.println(day);
+      pw.println(profit);
+      pw.println(balance);
+      pw.println(expenses);
+      pw.close(); 
+    } catch(IOException e) 
+    {
+    }
   }
   
   public void loadstores()
@@ -186,6 +215,7 @@ public class MallKing extends JPanel
         else if(loadGame)
         {
           m.loading();
+          m.loadstores();
         }
         m.repaint(); 
         Thread.sleep(10); 
