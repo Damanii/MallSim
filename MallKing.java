@@ -35,7 +35,9 @@ public class MallKing extends JPanel
   private static double expenses;
   private Boolean paused=false;
   Store[] store = new Store[48];
-  
+  public static int clickX;
+  public static int clickY;
+  int[][] mallstore = new int[35][20];
   public MallKing()
     //after load set back to false
   {
@@ -44,31 +46,38 @@ public class MallKing extends JPanel
       {
         mouseX=me.getX();
         mouseY=me.getY();
-        //System.out.println(mouseX+" , "+ mouseY);
+        clickX=mouseX/38+1;
+        clickY=mouseY/38+1;
+        //System.out.println(mouseX+" , "+mouseY);
+        System.out.println(clickX+" , "+clickY);
+        System.out.println(mallstore[clickX][clickY]);
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           playGame=true;
-          //System.out.println("PLAY");
+          System.out.println("PLAY");
         }
         if((mouseX>=510&&mouseX<=770&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           loadGame=true;
-          //System.out.println("LOAD");
+          System.out.println("LOAD");
         }
         if((mouseX>=805&&mouseX<=1070&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
-          //System.out.println("OPTIONS");
+          System.out.println("OPTIONS");
         }
-        //System.out.println((mouseX/38)+1);
-        //System.out.println((mouseY/38)+1);
-        //System.out.println(stores[(mouseX/38)+1][(mouseY/38)+1]);
-        
-      }}); 
-    for(int i=0;i<49; i++)
-    {
-      
-    }
-    
+      }      
+    }); 
+//    try { 
+//      FileReader fr = new FileReader("save.txt"); 
+//      BufferedReader br = new BufferedReader(fr); 
+//      for(int i=0;i<49; i++)
+//      { 
+//        store[i]=()
+//      }
+//    }
+//    catch(IOException e) 
+//    {
+//    }
   }
   
   public void loading()
@@ -83,6 +92,28 @@ public class MallKing extends JPanel
       profit = Double.parseDouble((br.readLine()));
       balance = Double.parseDouble(br.readLine());
       expenses = Double.parseDouble(br.readLine());
+      br.close(); 
+    } catch(IOException e) 
+    {
+    }
+    loadGame=false;
+    playGame=true;
+    
+  }
+  
+  public void loadstores()
+  {
+    try { 
+      FileReader fr = new FileReader("Mall.txt"); 
+      BufferedReader br = new BufferedReader(fr); 
+      for (int a=0;a<20;a++)
+      {
+        for (int b=0;b<19;b++)
+        {
+          mallstore[a+8][b+1] = Integer.parseInt(br.readLine());
+        }
+      }
+      
       br.close(); 
     } catch(IOException e) 
     {
@@ -136,18 +167,19 @@ public class MallKing extends JPanel
   
   public static void main(String[]args) throws InterruptedException
   { 
+//    System.out.println(mallstore[clickX][clickY]);
     JFrame frame = new JFrame("Mall King");
     MallKing m = new MallKing();
     frame.add(m); 
     frame.setSize(1280, 760);
     frame.setVisible(true); 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
     while (true) {
       {
         if(playGame)
         {
           m.newGame(cash,day,month,year,profit,balance,expenses);
+          m.loadstores();
         }
         else if(loadGame)
         {
@@ -157,5 +189,6 @@ public class MallKing extends JPanel
         Thread.sleep(10); 
       }
     }
+    
   }
 }
