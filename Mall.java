@@ -13,14 +13,12 @@ public class Mall
   public Mall()
   {
     try {
-      img = ImageIO.read(new File("DEMO2.png"));
+      img = ImageIO.read(new File("MALL1.png"));
     } catch (IOException e) 
     {
       System.out.println("NO IMG");
     }
   }
-
-  public void allocateStoreSlot(int x, int y, int z)
   
   public void allocateStoreSlot()
   {

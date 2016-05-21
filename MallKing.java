@@ -44,39 +44,31 @@ public class MallKing extends JPanel
       {
         mouseX=me.getX();
         mouseY=me.getY();
-        System.out.println(mouseX+" , "+ mouseY);
+        //System.out.println(mouseX+" , "+ mouseY);
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           playGame=true;
-          System.out.println("PLAY");
+          //System.out.println("PLAY");
         }
         if((mouseX>=510&&mouseX<=770&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           loadGame=true;
-          System.out.println("LOAD");
+          //System.out.println("LOAD");
         }
         if((mouseX>=805&&mouseX<=1070&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
-          System.out.println("OPTIONS");
+          //System.out.println("OPTIONS");
         }
-      }
-    }); 
-    try { 
-      FileReader fr = new FileReader("StoreList.txt"); 
-      BufferedReader br = new BufferedReader(fr); 
-      for(int i=0;i<48; i++)
-      {
-        String name=br.readLine();
-        int size = Integer.parseInt(br.readLine());
-        int stars = Integer.parseInt(br.readLine());
-        int profitability = Integer.parseInt(br.readLine());
-        int cost = Integer.parseInt(br.readLine());
-        store[i]=(new Store(name, size, stars, profitability, cost));
-      }
-    }
-    catch(IOException e) 
+        //System.out.println((mouseX/38)+1);
+        //System.out.println((mouseY/38)+1);
+        //System.out.println(stores[(mouseX/38)+1][(mouseY/38)+1]);
+        
+      }}); 
+    for(int i=0;i<49; i++)
     {
+      
     }
+    
   }
   
   public void loading()
@@ -126,7 +118,7 @@ public class MallKing extends JPanel
       {
         this.day++;
       }
-      System.out.println((this.day/120));
+      //System.out.println((this.day/120));
     }
   }
   
