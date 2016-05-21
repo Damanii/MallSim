@@ -21,6 +21,8 @@ public class Mall
   }
 
   public void allocateStoreSlot(int x, int y, int z)
+  
+  public void allocateStoreSlot()
   {
     
   }
