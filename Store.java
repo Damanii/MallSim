@@ -9,10 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 public class Store
 {
-  public boolean isPlaced;
   public Store()
   {
-    
   }
   public Store(String Name, int size, int stars, int profiabililty, int cost)
   {
