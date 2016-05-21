@@ -151,12 +151,28 @@ public class MallKing extends JPanel
     }
     loadGame=false;
     playGame=true; 
+     try { 
+      FileReader fr = new FileReader("mallSave.txt"); 
+      BufferedReader br = new BufferedReader(fr); 
+      for (int a=1;a<23;a++)
+      {
+        for (int b=1;b<13;b++)
+        {
+          mallstore[a][b] = Integer.parseInt(br.readLine());
+        }
+      }      
+      br.close(); 
+    } catch(IOException e) 
+    {
+    }
+    loadGame=false;
+    playGame=true;    
   }
   
   public void save()
   {
     try { 
-      FileWriter fw = new FileWriter("save1.txt"); 
+      FileWriter fw = new FileWriter("save.txt"); 
       PrintWriter pw = new PrintWriter(fw);
       pw.println(cash);
       pw.println(year);
@@ -169,12 +185,26 @@ public class MallKing extends JPanel
     } catch(IOException e) 
     {
     }
+    try { 
+      FileWriter fw = new FileWriter("mallSave.txt"); 
+      PrintWriter pw = new PrintWriter(fw);
+      for (int a=1;a<23;a++)
+      {
+        for (int b=1;b<13;b++)
+        {
+          pw.println(mallstore[a][b]);
+        }
+      }      
+      pw.close(); 
+    } catch(IOException e) 
+    {
+    }
   }
   
   public void loadstores()
   {
     try { 
-      FileReader fr = new FileReader("Mall.txt"); 
+      FileReader fr = new FileReader("mallLoad.txt"); 
       BufferedReader br = new BufferedReader(fr); 
       for (int a=1;a<23;a++)
       {
@@ -205,21 +235,21 @@ public class MallKing extends JPanel
     {// change variables for day and division for slow/fast
       if(day>=daylength)
       {
-        month++;
+        this.month++;
         this.day=daymod;
       }
       if(month==12)
       {
-        year++;
+        this.year++;
         this.month=1;
       }
       if(!paused)
       {
         this.day++;
       }
-      System.out.println((this.day/daymod));
+      //System.out.println((this.day/daymod));
       
-      //System.out.println((this.month));
+      System.out.println((this.month));
       //System.out.println((this.year));
     }
   }
