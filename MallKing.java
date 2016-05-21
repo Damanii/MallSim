@@ -29,7 +29,7 @@ public class MallKing extends JPanel
   private static int cash;
   private static int year;
   private static int month;
-  private static int day;
+  private static int day=120;
   private static Boolean isMuted;
   private static double profit;
   private static double balance;
@@ -39,7 +39,10 @@ public class MallKing extends JPanel
   public static int clickX;
   public static int clickY;
   int[][] mallstore = new int[23][13];
+  public static int daylength=3600;
+  public static int daymod=120;
   public MallKing()
+    
     //after load set back to false
   {
     addMouseListener(new MouseAdapter() { 
@@ -69,13 +72,42 @@ public class MallKing extends JPanel
         }    
         if(mallstore[clickX][clickY]==805)
         {
-          paused=!paused;
+          if(daymod==15)
+          {
+          }
+          else
+          {
+            daylength=daylength/2;
+            day=day/2;
+            daymod=daymod/2;
+            System.out.println(daylength);
+            System.out.println(daymod);
+          }
         }
         if(mallstore[clickX][clickY]==806)
         {
-          save();
+          
+          if(daylength==1887436800)
+          {
+          }
+          else
+          {
+            daylength=daylength*2;
+            day=day*2;
+            daymod=daymod*2;
+            System.out.println(daylength);
+            System.out.println(daymod);
+          }
         }
         if(mallstore[clickX][clickY]==807)
+        {
+          paused=!paused;
+        }
+        if(mallstore[clickX][clickY]==808)
+        {
+          save();
+        }
+        if(mallstore[clickX][clickY]==809)
         {
           //settings();
         }
@@ -169,14 +201,12 @@ public class MallKing extends JPanel
     this.year=year;
     this.month=month;
     this.day=day;
-    int slowday=3600;
-    int fastday=1800;
     if(!paused)
     {// change variables for day and division for slow/fast
-      if(day==fastday)
+      if(day>=daylength)
       {
         month++;
-        this.day=1;
+        this.day=daymod;
       }
       if(month==12)
       {
@@ -187,7 +217,10 @@ public class MallKing extends JPanel
       {
         this.day++;
       }
-      System.out.println((this.day/120));
+      System.out.println((this.day/daymod));
+      
+      //System.out.println((this.month));
+      //System.out.println((this.year));
     }
   }
   
