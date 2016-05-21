@@ -66,12 +66,16 @@ public class MallKing extends JPanel
         {
           options=true;
           System.out.println("OPTIONS");
-        }
+        }    
         if(mallstore[clickX][clickY]==805)
+        {
+          paused=!paused;
+        }
+        if(mallstore[clickX][clickY]==806)
         {
           save();
         }
-        if(mallstore[clickX][clickY]==806)
+        if(mallstore[clickX][clickY]==807)
         {
           //settings();
         }
@@ -183,7 +187,7 @@ public class MallKing extends JPanel
       {
         this.day++;
       }
-      //System.out.println((this.day/120));
+      System.out.println((this.day/120));
     }
   }
   
