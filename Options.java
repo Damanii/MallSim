@@ -14,7 +14,7 @@ public class Options
   { 
     try
       {
-        img = ImageIO.read(new File("StoreCard.png"));
+        img = ImageIO.read(new File("Options.png"));
       } catch (IOException e)
       {
         System.out.println("NO IMG");

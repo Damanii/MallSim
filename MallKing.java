@@ -10,7 +10,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.Object;
-import  java.util.EventObject;
+import java.util.EventObject;
 import java.awt.AWTEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
@@ -53,8 +53,8 @@ public class MallKing extends JPanel
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
         //System.out.println(mouseX+" , "+mouseY);
-        System.out.println(clickX+" , "+clickY);
-        System.out.println(mallstore[clickX][clickY]);
+        //System.out.println(clickX+" , "+clickY);
+        //System.out.println(mallstore[clickX][clickY]);
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           playGame=true;
@@ -80,8 +80,8 @@ public class MallKing extends JPanel
             daylength=daylength/2;
             day=day/2;
             daymod=daymod/2;
-            System.out.println(daylength);
-            System.out.println(daymod);
+            //System.out.println(daylength);
+            //System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==806)
@@ -95,8 +95,8 @@ public class MallKing extends JPanel
             daylength=daylength*2;
             day=day*2;
             daymod=daymod*2;
-            System.out.println(daylength);
-            System.out.println(daymod);
+            //System.out.println(daylength);
+            //System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==807)
@@ -111,6 +111,7 @@ public class MallKing extends JPanel
         {
           //settings();
         }
+        
       }      
       
     }); 
@@ -130,7 +131,6 @@ public class MallKing extends JPanel
     catch(IOException e) 
     {
     }
-    
   }
   
   public void loading()
@@ -151,7 +151,7 @@ public class MallKing extends JPanel
     }
     loadGame=false;
     playGame=true; 
-     try { 
+    try { 
       FileReader fr = new FileReader("mallSave.txt"); 
       BufferedReader br = new BufferedReader(fr); 
       for (int a=1;a<23;a++)
@@ -249,7 +249,7 @@ public class MallKing extends JPanel
       }
       //System.out.println((this.day/daymod));
       
-      System.out.println((this.month));
+      //System.out.println((this.month));
       //System.out.println((this.year));
     }
   }
@@ -259,19 +259,23 @@ public class MallKing extends JPanel
     super.paint(g);
     Graphics2D g2d = (Graphics2D) g;    
     t.paint(g2d);
+//    Font myFont = new Font ("Courier", 1, 72);
+//    g.setFont (myFont);
+//    g.drawString(String.valueOf(cash),1080,115);
     if(playGame)
     {
       ma.paint(g2d);
     }
   }
+  
   public static void main(String[]args) throws InterruptedException
   { 
-    JFrame frame = new JFrame("Mall King");
+    JFrame frame = new JFrame("Mall King");   
     MallKing m = new MallKing();
     frame.add(m); 
     frame.setSize(1280, 760);
     frame.setVisible(true); 
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   
     while (true) {
       {
         if(playGame)

@@ -27,6 +27,7 @@ public class Mall
   
   public void paint(Graphics2D g2d)
   {
+    g2d.drawString("Click the mouse inside the window.",40,45);
     g2d.drawImage(img, 0, 0, null);        
   }
 }
