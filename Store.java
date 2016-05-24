@@ -14,5 +14,6 @@ public class Store
   }
   public Store(String Name, int size, int stars, int profiabililty, int cost)
   {
+    
   }
 }
