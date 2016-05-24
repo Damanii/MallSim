@@ -25,11 +25,12 @@ public class MallKing extends JPanel
   private static int mouseY;
   private static boolean playGame;
   private static boolean loadGame;
+  private static boolean newGame;
   private static boolean options;
   private static int cash;
   private static int year;
   private static int month;
-  private static int day=120;
+  private static int day;
   private static Boolean isMuted;
   private static double profit;
   private static double balance;
@@ -57,7 +58,7 @@ public class MallKing extends JPanel
         //System.out.println(mallstore[clickX][clickY]);
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
-          playGame=true;
+          newGame=true;
           //System.out.println("PLAY");
         }
         if((mouseX>=510&&mouseX<=770&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
@@ -80,8 +81,8 @@ public class MallKing extends JPanel
             daylength=daylength/2;
             day=day/2;
             daymod=daymod/2;
-            //System.out.println(daylength);
-            //System.out.println(daymod);
+            System.out.println(daylength);
+            System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==806)
@@ -95,8 +96,8 @@ public class MallKing extends JPanel
             daylength=daylength*2;
             day=day*2;
             daymod=daymod*2;
-            //System.out.println(daylength);
-            //System.out.println(daymod);
+            System.out.println(daylength);
+            System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==807)
@@ -145,12 +146,14 @@ public class MallKing extends JPanel
       profit = Double.parseDouble((br.readLine()));
       balance = Double.parseDouble(br.readLine());
       expenses = Double.parseDouble(br.readLine());
+//      System.out.println(cash);
+//      System.out.println(year);
+//      System.out.println(month);
+//      System.out.println(day);
       br.close(); 
     } catch(IOException e) 
     {
     }
-    loadGame=false;
-    playGame=true; 
     try { 
       FileReader fr = new FileReader("mallSave.txt"); 
       BufferedReader br = new BufferedReader(fr); 
@@ -167,6 +170,17 @@ public class MallKing extends JPanel
     }
     loadGame=false;
     playGame=true;    
+  }
+  
+  public void loadNew()
+  {
+    cash = 500000;
+    year = 1;
+    month = 1;
+    day  = 120;
+    loadGame=false;
+    playGame=true;  
+    newGame=false;  
   }
   
   public void save()
@@ -218,7 +232,8 @@ public class MallKing extends JPanel
     {
     }
     loadGame=false;
-    playGame=true;    
+    playGame=true;   
+    newGame=false;
   }
   
   public void newGame(int cash, int day, int month, int year, double profit, double balance, double expenses)
@@ -228,11 +243,8 @@ public class MallKing extends JPanel
   
   public void calendar(int year, int month, int day)
   {
-    this.year=year;
-    this.month=month;
-    this.day=day;
     if(!paused)
-    {// change variables for day and division for slow/fast
+    {
       if(day>=daylength)
       {
         this.month++;
@@ -247,8 +259,7 @@ public class MallKing extends JPanel
       {
         this.day++;
       }
-      //System.out.println((this.day/daymod));
-      
+      System.out.println((this.day/daymod));      
       //System.out.println((this.month));
       //System.out.println((this.year));
     }
@@ -278,15 +289,18 @@ public class MallKing extends JPanel
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   
     while (true) {
       {
-        if(playGame)
+        if(newGame)
+        {
+          m.loadNew();
+          m.loadstores();
+        }
+        else if(playGame)
         {
           m.newGame(cash,day,month,year,profit,balance,expenses);
-          m.loadstores();
         }
         else if(loadGame)
         {
           m.loading();
-          m.loadstores();
         }
         m.repaint(); 
         Thread.sleep(10); 
