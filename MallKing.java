@@ -29,7 +29,7 @@ public class MallKing extends JPanel
   private static int cash;
   private static int year;
   private static int month;
-  private static int day=120;
+  private static int day;
   private static Boolean isMuted;
   private static double profit;
   private static double balance;
@@ -52,9 +52,6 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        //System.out.println(mouseX+" , "+mouseY);
-        //System.out.println(clickX+" , "+clickY);
-        //System.out.println(mallstore[clickX][clickY]);
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           playGame=true;
@@ -80,8 +77,6 @@ public class MallKing extends JPanel
             daylength=daylength/2;
             day=day/2;
             daymod=daymod/2;
-            //System.out.println(daylength);
-            //System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==806)
@@ -95,8 +90,6 @@ public class MallKing extends JPanel
             daylength=daylength*2;
             day=day*2;
             daymod=daymod*2;
-            //System.out.println(daylength);
-            //System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==807)
@@ -142,9 +135,6 @@ public class MallKing extends JPanel
       year = Integer.parseInt(br.readLine());
       month = Integer.parseInt(br.readLine());
       day  = Integer.parseInt(br.readLine());
-      profit = Double.parseDouble((br.readLine()));
-      balance = Double.parseDouble(br.readLine());
-      expenses = Double.parseDouble(br.readLine());
       br.close(); 
     } catch(IOException e) 
     {
@@ -247,10 +237,6 @@ public class MallKing extends JPanel
       {
         this.day++;
       }
-      //System.out.println((this.day/daymod));
-      
-      //System.out.println((this.month));
-      //System.out.println((this.year));
     }
   }
   
@@ -259,12 +245,13 @@ public class MallKing extends JPanel
     super.paint(g);
     Graphics2D g2d = (Graphics2D) g;    
     t.paint(g2d);
-//    Font myFont = new Font ("Courier", 1, 72);
-//    g.setFont (myFont);
-//    g.drawString(String.valueOf(cash),1080,115);
     if(playGame)
     {
       ma.paint(g2d);
+      Font myFont = new Font ("Arial", 1, 72);
+      g.setFont (myFont);
+      g.drawString("$"+String.valueOf(cash),60,115);
+      g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),60,55);
     }
   }
   
