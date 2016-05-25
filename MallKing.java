@@ -25,7 +25,6 @@ public class MallKing extends JPanel
   private static int mouseY;
   private static boolean playGame;
   private static boolean loadGame;
-  private static boolean newGame;
   private static boolean options;
   private static int cash;
   private static int year;
@@ -53,12 +52,9 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        //System.out.println(mouseX+" , "+mouseY);
-        //System.out.println(clickX+" , "+clickY);
-        //System.out.println(mallstore[clickX][clickY]);
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
-          newGame=true;
+          playGame=true;
           //System.out.println("PLAY");
         }
         if((mouseX>=510&&mouseX<=770&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
@@ -81,8 +77,6 @@ public class MallKing extends JPanel
             daylength=daylength/2;
             day=day/2;
             daymod=daymod/2;
-            System.out.println(daylength);
-            System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==806)
@@ -96,8 +90,6 @@ public class MallKing extends JPanel
             daylength=daylength*2;
             day=day*2;
             daymod=daymod*2;
-            System.out.println(daylength);
-            System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==807)
@@ -143,17 +135,12 @@ public class MallKing extends JPanel
       year = Integer.parseInt(br.readLine());
       month = Integer.parseInt(br.readLine());
       day  = Integer.parseInt(br.readLine());
-      profit = Double.parseDouble((br.readLine()));
-      balance = Double.parseDouble(br.readLine());
-      expenses = Double.parseDouble(br.readLine());
-//      System.out.println(cash);
-//      System.out.println(year);
-//      System.out.println(month);
-//      System.out.println(day);
       br.close(); 
     } catch(IOException e) 
     {
     }
+    loadGame=false;
+    playGame=true; 
     try { 
       FileReader fr = new FileReader("mallSave.txt"); 
       BufferedReader br = new BufferedReader(fr); 
@@ -170,17 +157,6 @@ public class MallKing extends JPanel
     }
     loadGame=false;
     playGame=true;    
-  }
-  
-  public void loadNew()
-  {
-    cash = 500000;
-    year = 1;
-    month = 1;
-    day  = 120;
-    loadGame=false;
-    playGame=true;  
-    newGame=false;  
   }
   
   public void save()
@@ -232,8 +208,7 @@ public class MallKing extends JPanel
     {
     }
     loadGame=false;
-    playGame=true;   
-    newGame=false;
+    playGame=true;    
   }
   
   public void newGame(int cash, int day, int month, int year, double profit, double balance, double expenses)
@@ -243,8 +218,11 @@ public class MallKing extends JPanel
   
   public void calendar(int year, int month, int day)
   {
+    this.year=year;
+    this.month=month;
+    this.day=day;
     if(!paused)
-    {
+    {// change variables for day and division for slow/fast
       if(day>=daylength)
       {
         this.month++;
@@ -259,9 +237,6 @@ public class MallKing extends JPanel
       {
         this.day++;
       }
-      System.out.println((this.day/daymod));      
-      //System.out.println((this.month));
-      //System.out.println((this.year));
     }
   }
   
@@ -270,12 +245,13 @@ public class MallKing extends JPanel
     super.paint(g);
     Graphics2D g2d = (Graphics2D) g;    
     t.paint(g2d);
-//    Font myFont = new Font ("Courier", 1, 72);
-//    g.setFont (myFont);
-//    g.drawString(String.valueOf(cash),1080,115);
     if(playGame)
     {
       ma.paint(g2d);
+      Font myFont = new Font ("Arial", 1, 72);
+      g.setFont (myFont);
+      g.drawString("$"+String.valueOf(cash),60,115);
+      g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),60,55);
     }
   }
   
@@ -289,18 +265,15 @@ public class MallKing extends JPanel
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   
     while (true) {
       {
-        if(newGame)
-        {
-          m.loadNew();
-          m.loadstores();
-        }
-        else if(playGame)
+        if(playGame)
         {
           m.newGame(cash,day,month,year,profit,balance,expenses);
+          m.loadstores();
         }
         else if(loadGame)
         {
           m.loading();
+          m.loadstores();
         }
         m.repaint(); 
         Thread.sleep(10); 
