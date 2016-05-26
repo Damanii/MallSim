@@ -20,7 +20,6 @@ import java.io.InputStream;
 
 public class MallKing extends JPanel
 {
-  //private TitleScreen t =new TitleScreen();
   private Mall ma =new Mall();
   private BufferedImage img = null;
   private static int mouseX;
@@ -37,7 +36,7 @@ public class MallKing extends JPanel
   private static double profit;
   private static double balance;
   private static double expenses;
-  private Boolean paused;
+  private Boolean paused=true;
   Store[] store = new Store[48];
   public static int clickX;
   public static int clickY;
@@ -100,8 +99,7 @@ public class MallKing extends JPanel
         {
           settings=!settings;
         }
-      }      
-      
+      }       
     }); 
     try { 
       FileReader fr = new FileReader("StoreList.txt"); 
@@ -131,8 +129,7 @@ public class MallKing extends JPanel
     daylength=3600;
     loadGame=false;
     playGame=true;  
-    newGame=false;
-    paused=false;    
+    newGame=false;   
   }
   
   public void loading()
@@ -150,9 +147,7 @@ public class MallKing extends JPanel
       daymod = Integer.parseInt(br.readLine());
       daylength  = Integer.parseInt(br.readLine());
       br.close(); 
-    } catch(IOException e) 
-    {
-    }
+    } catch(IOException e) {}
     try { 
       FileReader fr = new FileReader("mallSave.txt"); 
       BufferedReader br = new BufferedReader(fr); 
@@ -250,10 +245,10 @@ public class MallKing extends JPanel
     Graphics2D g2d = (Graphics2D) g;    
     if(!playGame)
     {
-          try
+      try
       {
         img = ImageIO.read(new File("MallKing.png"));
-              g.drawImage(img, 0, 0, null);    
+        g.drawImage(img, 0, 0, null);    
       } catch (IOException e){}
     }
     if(playGame)
@@ -264,58 +259,58 @@ public class MallKing extends JPanel
         g.setFont(font);
         Color fontcolor = new Color(33,33,33);
         g.setColor (fontcolor);
-        ma.paint(g2d);
-        
-        if (settings==true)
-        { 
-          try
-          {
-            img = ImageIO.read(new File("Settings.png"));
-          } catch (IOException e){}
-          g.drawImage(img, 0, 0, null);
-        }
-        
-        if (daymod!=15)
-        { 
-          try
-          {
-            img = ImageIO.read(new File("Up.png"));
-          } catch (IOException e){}
-          g.drawImage(img, 0, 0, null);
-        }
-        
-        if (daymod!=960)
-        { 
-          try
-          {
-            img = ImageIO.read(new File("Down.png"));
-          } catch (IOException e){}
-          g.drawImage(img, 0, 0, null);
-        }
-        
-        if (paused==true)
-        { 
-          try
-          {
-            img = ImageIO.read(new File("Play.png"));
-          } catch (IOException e){}
-          g.drawImage(img, 0, 0, null);
-        }
-        
-        if (paused==false)
-        { 
-          try
-          {
-            img = ImageIO.read(new File("Pause.png"));
-          } catch (IOException e){}
-          g.drawImage(img, 0, 0, null);
-        }
-        
+        ma.paint(g2d); 
         g.drawString("$"+String.valueOf(cash),65,107);
         g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),65,45);
       } 
-      catch (IOException e){}
-      catch (FontFormatException e){}
+      catch (IOException e){} catch (FontFormatException e){}
+      if (settings==true)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Settings.png"));
+          g.drawImage(img, 0, 0, null);
+          img = ImageIO.read(new File("Increase.png"));
+          g.drawImage(img, 0, 0, null);
+          img = ImageIO.read(new File("Decrease.png"));
+          g.drawImage(img, 0, 0, null);
+          img = ImageIO.read(new File("Mute.png"));
+          g.drawImage(img, 0, 0, null);
+        } catch (IOException e){}
+        
+      }        
+      if (daymod!=15)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Up.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+      }     
+      if (daymod!=960)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Down.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+      } 
+      if (paused==true)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Play.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+      }
+      if (paused==false)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Pause.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+      }
     }
   }
   
