@@ -54,18 +54,13 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        //System.out.println(mouseX+" , "+mouseY);
-        //System.out.println(clickX+" , "+clickY);
-        //System.out.println(mallstore[clickX][clickY]);
         if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           newGame=true;
-          //System.out.println("PLAY");
         }
         if((mouseX>=510&&mouseX<=770&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           loadGame=true;
-          //System.out.println("LOAD");
         }
         if((mouseX>=805&&mouseX<=1070&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
@@ -82,8 +77,6 @@ public class MallKing extends JPanel
             daylength=daylength/2;
             day=day/2;
             daymod=daymod/2;
-            System.out.println(daylength);
-            System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==806)
@@ -97,8 +90,6 @@ public class MallKing extends JPanel
             daylength=daylength*2;
             day=day*2;
             daymod=daymod*2;
-            System.out.println(daylength);
-            System.out.println(daymod);
           }
         }
         if(mallstore[clickX][clickY]==807)
@@ -251,7 +242,7 @@ public class MallKing extends JPanel
         this.month++;
         this.day=daymod;
       }
-      if(month==12)
+      if(month>12)
       {
         this.year++;
         this.month=1;
@@ -260,9 +251,6 @@ public class MallKing extends JPanel
       {
         this.day++;
       }
-      System.out.println((this.day/daymod));      
-      //System.out.println((this.month));
-      //System.out.println((this.year));
     }
   }
   
@@ -284,10 +272,7 @@ public class MallKing extends JPanel
         g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),60,55);
       } 
       catch (IOException e){}
-      catch (FontFormatException e) 
-      {
-        //Handle exception
-      }
+      catch (FontFormatException e){}
     }
   }
   
