@@ -149,10 +149,8 @@ public class MallKing extends JPanel
       profit = Double.parseDouble((br.readLine()));
       balance = Double.parseDouble(br.readLine());
       expenses = Double.parseDouble(br.readLine());
-//      System.out.println(cash);
-//      System.out.println(year);
-//      System.out.println(month);
-//      System.out.println(day);
+      daymod = Integer.parseInt(br.readLine());
+      daylength  = Integer.parseInt(br.readLine());
       br.close(); 
     } catch(IOException e) 
     {
@@ -168,9 +166,7 @@ public class MallKing extends JPanel
         }
       }      
       br.close(); 
-    } catch(IOException e) 
-    {
-    }
+    } catch(IOException e) {}
     loadGame=false;
     playGame=true;    
   }
@@ -187,10 +183,10 @@ public class MallKing extends JPanel
       pw.println(profit);
       pw.println(balance);
       pw.println(expenses);
+      pw.println(daymod);
+      pw.println(daylength);
       pw.close(); 
-    } catch(IOException e) 
-    {
-    }
+    } catch(IOException e) {}
     try { 
       FileWriter fw = new FileWriter("mallSave.txt"); 
       PrintWriter pw = new PrintWriter(fw);
@@ -202,9 +198,7 @@ public class MallKing extends JPanel
         }
       }      
       pw.close(); 
-    } catch(IOException e) 
-    {
-    }
+    } catch(IOException e) {}
   }
   
   public void loadstores()
@@ -220,9 +214,7 @@ public class MallKing extends JPanel
         }
       }      
       br.close(); 
-    } catch(IOException e) 
-    {
-    }
+    } catch(IOException e){}
     loadGame=false;
     playGame=true;   
     newGame=false;
@@ -263,13 +255,13 @@ public class MallKing extends JPanel
     {
       try {
         Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
-        font = font.deriveFont(72F);
+        font = font.deriveFont(48F);
         g.setFont(font);
         Color fontcolor = new Color(96,125,139);
         g.setColor (fontcolor);
         ma.paint(g2d);
-        g.drawString("$"+String.valueOf(cash),60,115);
-        g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),60,55);
+        g.drawString("$"+String.valueOf(cash),65,107);
+        g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),65,45);
       } 
       catch (IOException e){}
       catch (FontFormatException e){}
