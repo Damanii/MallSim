@@ -15,6 +15,8 @@ import java.awt.AWTEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
+import java.io.InputStream;
 
 public class MallKing extends JPanel
 {
@@ -104,9 +106,7 @@ public class MallKing extends JPanel
         {
           //settings();
         }
-        
-      }      
-      
+      }           
     }); 
     try { 
       FileReader fr = new FileReader("StoreList.txt"); 
@@ -247,11 +247,21 @@ public class MallKing extends JPanel
     t.paint(g2d);
     if(playGame)
     {
-      ma.paint(g2d);
-      Font myFont = new Font ("Arial", 1, 72);
-      g.setFont (myFont);
+      try {
+        Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
+        font = font.deriveFont(72F);
+        g.setFont(font);
+        Color fontcolor = new Color(96,125,139);
+        g.setColor (fontcolor);
+        ma.paint(g2d);
       g.drawString("$"+String.valueOf(cash),60,115);
       g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),60,55);
+      } 
+      catch (IOException e){}
+      catch (FontFormatException e) 
+      {
+        //Handle exception
+      }
     }
   }
   
