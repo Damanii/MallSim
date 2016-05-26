@@ -13,7 +13,7 @@ public class Mall
   public Mall()
   {
     try {
-      img = ImageIO.read(new File("DEMO2.png"));
+      img = ImageIO.read(new File("Mall.png"));
     } catch (IOException e) 
     {
       System.out.println("NO IMG");

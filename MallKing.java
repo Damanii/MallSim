@@ -28,7 +28,7 @@ public class MallKing extends JPanel
   private static boolean playGame;
   private static boolean loadGame;
   private static boolean newGame;
-  private static boolean options;
+  private static boolean settings;
   private static int cash;
   private static int year;
   private static int month;
@@ -54,19 +54,14 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        if((mouseX>=215&&mouseX<=475&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
+        if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           newGame=true;
         }
-        if((mouseX>=510&&mouseX<=770&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
+        if((mouseX>=659&&mouseX<=919&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           loadGame=true;
-        }
-        if((mouseX>=805&&mouseX<=1070&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
-        {
-          options=true;
-          System.out.println("Settings");
-        }   
+        } 
         if (mallstore[clickX][clickY]==810)
         {
           playGame=false;
@@ -107,7 +102,7 @@ public class MallKing extends JPanel
         }
         if(mallstore[clickX][clickY]==809)
         {
-          //settings();
+          settings=!settings;
         }
       }      
       
@@ -141,7 +136,7 @@ public class MallKing extends JPanel
     loadGame=false;
     playGame=true;  
     newGame=false;
-    paused=false;
+    paused=false;    
   }
   
   public void loading()
@@ -264,9 +259,55 @@ public class MallKing extends JPanel
         Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
         font = font.deriveFont(48F);
         g.setFont(font);
-        Color fontcolor = new Color(96,125,139);
+        Color fontcolor = new Color(33,33,33);
         g.setColor (fontcolor);
         ma.paint(g2d);
+        
+        if (settings==true)
+        { 
+          try
+          {
+            img = ImageIO.read(new File("Settings.png"));
+          } catch (IOException e){}
+          g.drawImage(img, 0, 0, null);
+        }
+        
+        if (daymod!=15)
+        { 
+          try
+          {
+            img = ImageIO.read(new File("Up.png"));
+          } catch (IOException e){}
+          g.drawImage(img, 0, 0, null);
+        }
+        
+        if (daylength!=1887436800)
+        { 
+          try
+          {
+            img = ImageIO.read(new File("Down.png"));
+          } catch (IOException e){}
+          g.drawImage(img, 0, 0, null);
+        }
+        
+        if (paused==true)
+        { 
+          try
+          {
+            img = ImageIO.read(new File("Play.png"));
+          } catch (IOException e){}
+          g.drawImage(img, 0, 0, null);
+        }
+        
+        if (paused==false)
+        { 
+          try
+          {
+            img = ImageIO.read(new File("Pause.png"));
+          } catch (IOException e){}
+          g.drawImage(img, 0, 0, null);
+        }
+        
         g.drawString("$"+String.valueOf(cash),65,107);
         g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),65,45);
       } 

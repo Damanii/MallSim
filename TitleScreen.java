@@ -15,10 +15,7 @@ public class TitleScreen
     try
       {
         img = ImageIO.read(new File("MallKing.png"));
-      } catch (IOException e)
-      {
-        System.out.println("NO IMG");
-      }
+      } catch (IOException e){}
   }
   public void paint(Graphics2D g2d)
   {
