@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 public class MallKing extends JPanel
 {
-  private TitleScreen t =new TitleScreen();
+  //private TitleScreen t =new TitleScreen();
   private Mall ma =new Mall();
   private BufferedImage img = null;
   private static int mouseX;
@@ -62,17 +62,15 @@ public class MallKing extends JPanel
         {
           loadGame=true;
         } 
-        if (mallstore[clickX][clickY]==810)
+        if (mallstore[clickX][clickY]==810&&playGame==true)
         {
           playGame=false;
           loadGame=false;
           newGame=false;
         }
-        if(mallstore[clickX][clickY]==805)
+        if(mallstore[clickX][clickY]==805&&playGame==true)
         {
-          if(daymod==15)
-          {
-          }
+          if(daymod==15){}
           else
           {
             daylength=daylength/2;
@@ -80,11 +78,9 @@ public class MallKing extends JPanel
             daymod=daymod/2;
           }
         }
-        if(mallstore[clickX][clickY]==806)
+        if(mallstore[clickX][clickY]==806&&playGame==true)
         {
-          if(daylength==1887436800)
-          {
-          }
+          if(daymod==960){}
           else
           {
             daylength=daylength*2;
@@ -92,15 +88,15 @@ public class MallKing extends JPanel
             daymod=daymod*2;
           }
         }
-        if(mallstore[clickX][clickY]==807)
+        if(mallstore[clickX][clickY]==807&&playGame==true)
         {
           paused=!paused;
         }
-        if(mallstore[clickX][clickY]==808)
+        if(mallstore[clickX][clickY]==808&&playGame==true)
         {
           save();
         }
-        if(mallstore[clickX][clickY]==809)
+        if(mallstore[clickX][clickY]==809&&playGame==true)
         {
           settings=!settings;
         }
@@ -252,7 +248,14 @@ public class MallKing extends JPanel
   {
     super.paint(g);
     Graphics2D g2d = (Graphics2D) g;    
-    t.paint(g2d);
+    if(!playGame)
+    {
+          try
+      {
+        img = ImageIO.read(new File("MallKing.png"));
+              g.drawImage(img, 0, 0, null);    
+      } catch (IOException e){}
+    }
     if(playGame)
     {
       try {
@@ -281,7 +284,7 @@ public class MallKing extends JPanel
           g.drawImage(img, 0, 0, null);
         }
         
-        if (daylength!=1887436800)
+        if (daymod!=960)
         { 
           try
           {
