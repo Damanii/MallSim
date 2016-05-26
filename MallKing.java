@@ -37,13 +37,13 @@ public class MallKing extends JPanel
   private static double profit;
   private static double balance;
   private static double expenses;
-  private Boolean paused=false;
+  private Boolean paused;
   Store[] store = new Store[48];
   public static int clickX;
   public static int clickY;
   int[][] mallstore = new int[23][13];
-  public static int daylength=3600;
-  public static int daymod=120;
+  public static int daylength;
+  public static int daymod;
   
   public MallKing()
   {
@@ -65,8 +65,14 @@ public class MallKing extends JPanel
         if((mouseX>=805&&mouseX<=1070&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
         {
           options=true;
-          System.out.println("OPTIONS");
-        }    
+          System.out.println("Settings");
+        }   
+        if (mallstore[clickX][clickY]==810)
+        {
+          playGame=false;
+          loadGame=false;
+          newGame=false;
+        }
         if(mallstore[clickX][clickY]==805)
         {
           if(daymod==15)
@@ -81,7 +87,6 @@ public class MallKing extends JPanel
         }
         if(mallstore[clickX][clickY]==806)
         {
-          
           if(daylength==1887436800)
           {
           }
@@ -104,7 +109,6 @@ public class MallKing extends JPanel
         {
           //settings();
         }
-        
       }      
       
     }); 
@@ -132,9 +136,12 @@ public class MallKing extends JPanel
     year = 1;
     month = 1;
     day  = 120;
+    daymod=120;
+    daylength=3600;
     loadGame=false;
     playGame=true;  
-    newGame=false;  
+    newGame=false;
+    paused=false;
   }
   
   public void loading()

@@ -40,6 +40,7 @@ public class Store
     else
     {
     }
+  return 0;
   }
   public double calculateExpenses()
   {
@@ -55,5 +56,6 @@ public class Store
     else
     {
     }
+    return 0;
   }
 }
