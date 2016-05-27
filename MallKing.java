@@ -114,9 +114,7 @@ public class MallKing extends JPanel
         store[i]=(new Store(name, size, stars, profitability, cost));
       }
     }
-    catch(IOException e) 
-    {
-    }
+    catch(IOException e){}
   }
   
   public void loadNew()
@@ -147,7 +145,7 @@ public class MallKing extends JPanel
       daymod = Integer.parseInt(br.readLine());
       daylength  = Integer.parseInt(br.readLine());
       br.close(); 
-    } catch(IOException e) {}
+    } catch(IOException e){}
     try { 
       FileReader fr = new FileReader("mallSave.txt"); 
       BufferedReader br = new BufferedReader(fr); 
@@ -159,7 +157,7 @@ public class MallKing extends JPanel
         }
       }      
       br.close(); 
-    } catch(IOException e) {}
+    } catch(IOException e){}
     loadGame=false;
     playGame=true;    
   }
@@ -179,7 +177,7 @@ public class MallKing extends JPanel
       pw.println(daymod);
       pw.println(daylength);
       pw.close(); 
-    } catch(IOException e) {}
+    } catch(IOException e){}
     try { 
       FileWriter fw = new FileWriter("mallSave.txt"); 
       PrintWriter pw = new PrintWriter(fw);
@@ -191,7 +189,7 @@ public class MallKing extends JPanel
         }
       }      
       pw.close(); 
-    } catch(IOException e) {}
+    } catch(IOException e){}
   }
   
   public void loadstores()
