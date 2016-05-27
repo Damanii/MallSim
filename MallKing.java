@@ -20,7 +20,6 @@ import java.io.InputStream;
 
 public class MallKing extends JPanel
 {
-  private Mall ma =new Mall();
   private BufferedImage img = null;
   private static int mouseX;
   private static int mouseY;
@@ -256,8 +255,9 @@ public class MallKing extends JPanel
         font = font.deriveFont(48F);
         g.setFont(font);
         Color fontcolor = new Color(33,33,33);
-        g.setColor (fontcolor);
-        ma.paint(g2d); 
+        g.setColor (fontcolor); 
+        img = ImageIO.read(new File("Mall.png"));
+        g.drawImage(img, 0, 0, null);
         g.drawString("$"+String.valueOf(cash),65,107);
         g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),65,45);
       } 
