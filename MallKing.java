@@ -31,6 +31,7 @@ public class MallKing extends JPanel
   private static int year;
   private static int month;
   private static int day;
+  private static int intro;
   private static Boolean isMuted;
   private static double profit;
   private static double balance;
@@ -52,11 +53,11 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
+        if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;
         }
-        if((mouseX>=659&&mouseX<=919&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame)
+        if((mouseX>=659&&mouseX<=919&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           loadGame=true;
         } 
@@ -244,8 +245,18 @@ public class MallKing extends JPanel
     {
       try
       {
-        img = ImageIO.read(new File("MallKing.png"));
-        g.drawImage(img, 0, 0, null);    
+        if(intro<60)
+        {
+          img = ImageIO.read(new File("Simoo.png"));
+          g.drawImage(img, 0, 0, null); 
+          intro++;
+        }
+        else
+        {
+          img = ImageIO.read(new File("Title.png"));
+          g.drawImage(img, 0, 0, null);  
+          
+        }
       } catch (IOException e){}
     }
     if(playGame)
