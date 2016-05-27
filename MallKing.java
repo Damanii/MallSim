@@ -31,12 +31,14 @@ public class MallKing extends JPanel
   private static int year;
   private static int month;
   private static int day;
-  private static int intro;
+  private static int intro=59;
   private static Boolean isMuted;
+  private static Boolean storeMenu;
+  private static int menu=0;
   private static double profit;
   private static double balance;
   private static double expenses;
-  private Boolean paused=true;
+  private Boolean paused;
   Store[] store = new Store[48];
   public static int clickX;
   public static int clickY;
@@ -99,6 +101,24 @@ public class MallKing extends JPanel
         {
           settings=!settings;
         }
+        if(mallstore[clickX][clickY]>=100&&mallstore[clickX][clickY]<=133&&playGame==true)
+        {
+          if (storeMenu==true&&menu==mallstore[clickX][clickY])
+          {
+            storeMenu=false;
+            menu=0;
+          }
+          else
+          {
+            storeMenu=true;
+            menu=mallstore[clickX][clickY];
+          }  
+        }
+        if(mallstore[clickX][clickY]==811&&storeMenu==true)
+        {
+          storeMenu=false;
+          menu=0;
+        }
       }       
     }); 
     try { 
@@ -128,6 +148,8 @@ public class MallKing extends JPanel
     loadGame=false;
     playGame=true;  
     newGame=false;   
+    storeMenu=false;
+    paused=true;
   }
   
   public void loading()
@@ -144,6 +166,7 @@ public class MallKing extends JPanel
       expenses = Double.parseDouble(br.readLine());
       daymod = Integer.parseInt(br.readLine());
       daylength  = Integer.parseInt(br.readLine());
+      storeMenu=false;
       br.close(); 
     } catch(IOException e){}
     try { 
@@ -264,14 +287,16 @@ public class MallKing extends JPanel
         Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
         font = font.deriveFont(48F);
         g.setFont(font);
-        Color fontcolor = new Color(33,33,33);
-        g.setColor (fontcolor); 
+        
         img = ImageIO.read(new File("Mall.png"));
         g.drawImage(img, 0, 0, null);
+        Color fontcolor = new Color(33,33,33);
+        g.setColor (fontcolor); 
         g.drawString("$"+String.valueOf(cash),65,107);
         g.drawString(String.valueOf(month)+"/"+String.valueOf(day/daymod)+"/"+String.valueOf(year),65,45);
       } 
       catch (IOException e){} catch (FontFormatException e){}
+      
       if (settings==true)
       { 
         try
@@ -285,7 +310,18 @@ public class MallKing extends JPanel
           img = ImageIO.read(new File("Mute.png"));
           g.drawImage(img, 0, 0, null);
         } catch (IOException e){}   
-      }        
+      }     
+      if (storeMenu==true)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Store.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+                        Color fontcolor = new Color(222,222,222);
+        g.setColor (fontcolor); 
+        g.drawString("$"+String.valueOf(cash),5,167);
+      }   
       if (daymod!=15)
       { 
         try
@@ -293,7 +329,7 @@ public class MallKing extends JPanel
           img = ImageIO.read(new File("Up.png"));
         } catch (IOException e){}
         g.drawImage(img, 0, 0, null);
-      }     
+      }  
       if (daymod!=960)
       { 
         try
