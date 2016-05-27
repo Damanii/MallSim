@@ -254,8 +254,7 @@ public class MallKing extends JPanel
         else
         {
           img = ImageIO.read(new File("Title.png"));
-          g.drawImage(img, 0, 0, null);  
-          
+          g.drawImage(img, 0, 0, null);    
         }
       } catch (IOException e){}
     }
@@ -285,8 +284,7 @@ public class MallKing extends JPanel
           g.drawImage(img, 0, 0, null);
           img = ImageIO.read(new File("Mute.png"));
           g.drawImage(img, 0, 0, null);
-        } catch (IOException e){}
-        
+        } catch (IOException e){}   
       }        
       if (daymod!=15)
       { 
