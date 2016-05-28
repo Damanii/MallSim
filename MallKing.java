@@ -167,6 +167,7 @@ public class MallKing extends JPanel
       daymod = Integer.parseInt(br.readLine());
       daylength  = Integer.parseInt(br.readLine());
       storeMenu=false;
+      paused=true;
       br.close(); 
     } catch(IOException e){}
     try { 
@@ -320,7 +321,7 @@ public class MallKing extends JPanel
         g.drawImage(img, 0, 0, null);
                         Color fontcolor = new Color(222,222,222);
         g.setColor (fontcolor); 
-        g.drawString("$"+String.valueOf(cash),5,167);
+        g.drawString(String.valueOf(menu),5,167);
       }   
       if (daymod!=15)
       { 
