@@ -33,12 +33,12 @@ public class MallKing extends JPanel
   private static int day;
   private static int intro=59;
   private static Boolean isMuted;
-  private static Boolean storeMenu;
+  private static Boolean storeMenu=false;
   private static int menu=0;
   private static double profit;
   private static double balance;
   private static double expenses;
-  private Boolean paused;
+  private Boolean paused=true;
   Store[] store = new Store[48];
   public static int clickX;
   public static int clickY;
