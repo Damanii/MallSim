@@ -1,22 +1,12 @@
 import javax.swing.*; 
 import java.awt.*;
-import javax.imageio.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.Object;
-import java.util.EventObject;
-import java.awt.AWTEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 import java.awt.Font;
-import java.io.InputStream;
 
 public class MallKing extends JPanel
 {
@@ -33,7 +23,9 @@ public class MallKing extends JPanel
   private static int day;
   private static int intro=59;
   private static Boolean isMuted;
+  private static Boolean changeStore=false;
   private static Boolean storeMenu=false;
+  private static Boolean pickStore=false;
   private static int menu=0;
   private static double profit;
   private static double balance;
@@ -55,6 +47,8 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
+        System.out.println(clickX+":"+clickY);
+        System.out.println(mallstore[clickX][clickY]);
         if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;
@@ -97,11 +91,11 @@ public class MallKing extends JPanel
         {
           save();
         }
-        if(mallstore[clickX][clickY]==809&&playGame==true)
+        if(mallstore[clickX][clickY]==809&&playGame==true&&changeStore==false)
         {
           settings=!settings;
         }
-        if(mallstore[clickX][clickY]>=100&&mallstore[clickX][clickY]<=133&&playGame==true)
+        if(mallstore[clickX][clickY]<=133&&playGame==true&&changeStore==false)
         {
           if (storeMenu==true&&menu==mallstore[clickX][clickY])
           {
@@ -114,10 +108,24 @@ public class MallKing extends JPanel
             menu=mallstore[clickX][clickY];
           }  
         }
-        if(mallstore[clickX][clickY]==811&&storeMenu==true)
+        if(mallstore[clickX][clickY]==811&&storeMenu==true&&changeStore==false)
         {
           storeMenu=false;
           menu=0;
+        }
+        if(mallstore[clickX][clickY]==813&&storeMenu==true)
+        {
+          changeStore=true;
+          settings=false;
+          
+          savetemp();
+          loadpicker();
+        }
+        if(changeStore==true&&mallstore[clickX][clickY]==817)
+        {
+          loadtemp();
+          changeStore=false;
+          
         }
       }       
     }); 
@@ -133,6 +141,7 @@ public class MallKing extends JPanel
         int cost = Integer.parseInt(br.readLine());
         store[i]=(new Store(name, size, stars, profitability, cost));
       }
+      br.close(); 
     }
     catch(IOException e){}
   }
@@ -150,6 +159,7 @@ public class MallKing extends JPanel
     newGame=false;   
     storeMenu=false;
     paused=true;
+    changeStore=false;
   }
   
   public void loading()
@@ -167,6 +177,7 @@ public class MallKing extends JPanel
       daymod = Integer.parseInt(br.readLine());
       daylength  = Integer.parseInt(br.readLine());
       storeMenu=false;
+      changeStore=false;
       paused=true;
       br.close(); 
     } catch(IOException e){}
@@ -233,6 +244,55 @@ public class MallKing extends JPanel
     loadGame=false;
     playGame=true;   
     newGame=false;
+    changeStore=false;
+  }
+  
+  public void loadpicker()
+  {
+    try { 
+      FileReader fr = new FileReader("storePicker.txt"); 
+      BufferedReader br = new BufferedReader(fr); 
+      for (int a=1;a<23;a++)
+      {
+        for (int b=1;b<13;b++)
+        {
+          mallstore[a][b] = Integer.parseInt(br.readLine());
+        }
+      }      
+      br.close(); 
+    } catch(IOException e){}
+  }
+  
+  public void loadtemp()
+  {
+    try { 
+      FileReader fr = new FileReader("mallTemp.txt"); 
+      BufferedReader br = new BufferedReader(fr); 
+      for (int a=1;a<23;a++)
+      {
+        for (int b=1;b<13;b++)
+        {
+          mallstore[a][b] = Integer.parseInt(br.readLine());
+        }
+      }      
+      br.close(); 
+    } catch(IOException e){}
+  }
+  
+  public void savetemp()
+  {
+    try { 
+      FileWriter fw = new FileWriter("mallTemp.txt"); 
+      PrintWriter pw = new PrintWriter(fw);
+      for (int a=1;a<23;a++)
+      {
+        for (int b=1;b<13;b++)
+        {
+          pw.println(mallstore[a][b]);
+        }
+      }      
+      pw.close(); 
+    } catch(IOException e){}
   }
   
   public void newGame(int cash, int day, int month, int year, double profit, double balance, double expenses)
@@ -319,10 +379,32 @@ public class MallKing extends JPanel
           img = ImageIO.read(new File("Store.png"));
         } catch (IOException e){}
         g.drawImage(img, 0, 0, null);
-                        Color fontcolor = new Color(222,222,222);
+        Color fontcolor = new Color(222,222,222);
         g.setColor (fontcolor); 
-        g.drawString(String.valueOf(menu),5,167);
+        try {
+          Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
+          
+          font = font.deriveFont(36F);
+          g.setFont(font);
+        }
+        catch (IOException e){} catch (FontFormatException e){}
+        if (menu<100)
+        {
+          g.drawString(store[menu].name,5,160);
+        }
+        else
+        {
+          g.drawString(String.valueOf(menu),5,160);
+        }
       }   
+      if (changeStore==true&&storeMenu==true)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("ChangeStore.png"));
+          g.drawImage(img, 0, 0, null);
+        } catch (IOException e){}
+      }  
       if (daymod!=15)
       { 
         try
