@@ -16,16 +16,17 @@ public class MallKing extends JPanel
   private static boolean playGame;
   private static boolean loadGame;
   private static boolean newGame;
-  private static boolean settings;
+  private static boolean settings=false;
+  private static Boolean isMuted=false;
+  private static Boolean changeStore=false;
+  private static Boolean storeMenu=false;
+  private static Boolean pickStore=false;
+  private static Boolean confirm=false;
   private static int cash;
   private static int year;
   private static int month;
   private static int day;
   private static int intro=59;
-  private static Boolean isMuted;
-  private static Boolean changeStore=false;
-  private static Boolean storeMenu=false;
-  private static Boolean pickStore=false;
   private static int menu=0;
   private static double profit;
   private static double balance;
@@ -34,7 +35,7 @@ public class MallKing extends JPanel
   Store[] store = new Store[48];
   public static int clickX;
   public static int clickY;
-  int[][] mallstore = new int[23][13];
+  int[][] clickGrid = new int[23][13];
   public static int daylength;
   public static int daymod;
   
@@ -48,7 +49,7 @@ public class MallKing extends JPanel
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
         System.out.println(clickX+":"+clickY);
-        System.out.println(mallstore[clickX][clickY]);
+        System.out.println(clickGrid[clickX][clickY]);
         if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;
@@ -57,13 +58,14 @@ public class MallKing extends JPanel
         {
           loadGame=true;
         } 
-        if (mallstore[clickX][clickY]==810&&playGame==true)
+        if (clickGrid[clickX][clickY]==810)
         {
+          loadgrid("gridClear.txt");
           playGame=false;
           loadGame=false;
           newGame=false;
         }
-        if(mallstore[clickX][clickY]==805&&playGame==true)
+        if(clickGrid[clickX][clickY]==805)
         {
           if(daymod==15){}
           else
@@ -73,7 +75,7 @@ public class MallKing extends JPanel
             daymod=daymod/2;
           }
         }
-        if(mallstore[clickX][clickY]==806&&playGame==true)
+        if(clickGrid[clickX][clickY]==806)
         {
           if(daymod==960){}
           else
@@ -83,21 +85,21 @@ public class MallKing extends JPanel
             daymod=daymod*2;
           }
         }
-        if(mallstore[clickX][clickY]==807&&playGame==true)
+        if(clickGrid[clickX][clickY]==807)
         {
           paused=!paused;
         }
-        if(mallstore[clickX][clickY]==808&&playGame==true)
+        if(clickGrid[clickX][clickY]==808)
         {
           save();
         }
-        if(mallstore[clickX][clickY]==809&&playGame==true&&changeStore==false)
+        if(clickGrid[clickX][clickY]==809&&changeStore==false)
         {
           settings=!settings;
         }
-        if(mallstore[clickX][clickY]<=133&&playGame==true&&changeStore==false)
+        if(clickGrid[clickX][clickY]<=133&&changeStore==false)
         {
-          if (storeMenu==true&&menu==mallstore[clickX][clickY])
+          if (storeMenu==true&&menu==clickGrid[clickX][clickY])
           {
             storeMenu=false;
             menu=0;
@@ -105,27 +107,41 @@ public class MallKing extends JPanel
           else
           {
             storeMenu=true;
-            menu=mallstore[clickX][clickY];
+            menu=clickGrid[clickX][clickY];
           }  
         }
-        if(mallstore[clickX][clickY]==811&&storeMenu==true&&changeStore==false)
+        if(clickGrid[clickX][clickY]==811&&storeMenu==true&&changeStore==false)
         {
           storeMenu=false;
           menu=0;
         }
-        if(mallstore[clickX][clickY]==813&&storeMenu==true)
+        if(clickGrid[clickX][clickY]==813&&storeMenu==true)
         {
           changeStore=true;
           settings=false;
-          
           savetemp();
-          loadgrid("storePicker.txt");
+          loadgrid("gridPicker.txt");
         }
-        if(changeStore==true&&mallstore[clickX][clickY]==817)
+        if(changeStore==true&&clickGrid[clickX][clickY]==817)
         {
-          loadgrid("mallTemp.txt");
+          loadgrid("gridTemp.txt");
           changeStore=false;
-          
+        }
+        if(clickGrid[clickX][clickY]>900&&clickGrid[clickX][clickY]<999)
+        {
+          confirm=true;
+          loadgrid("gridConfirm.txt");
+        }
+        if(clickGrid[clickX][clickY]==1001)
+        {
+          loadgrid("gridTemp.txt");
+          confirm=false;
+          changeStore=false; 
+        }
+        if(clickGrid[clickX][clickY]==1002)
+        {
+          loadgrid("gridPicker.txt");
+          confirm=false;
         }
       }       
     }); 
@@ -181,7 +197,7 @@ public class MallKing extends JPanel
       paused=true;
       br.close(); 
     } catch(IOException e){}
-    loadgrid("mallSave.txt");
+    loadgrid("gridSave.txt");
     loadGame=false;
     playGame=true;    
   }
@@ -203,13 +219,13 @@ public class MallKing extends JPanel
       pw.close(); 
     } catch(IOException e){}
     try { 
-      FileWriter fw = new FileWriter("mallSave.txt"); 
+      FileWriter fw = new FileWriter("gridSave.txt"); 
       PrintWriter pw = new PrintWriter(fw);
       for (int a=1;a<23;a++)
       {
         for (int b=1;b<13;b++)
         {
-          pw.println(mallstore[a][b]);
+          pw.println(clickGrid[a][b]);
         }
       }      
       pw.close(); 
@@ -225,7 +241,7 @@ public class MallKing extends JPanel
       {
         for (int b=1;b<13;b++)
         {
-          mallstore[a][b] = Integer.parseInt(br.readLine());
+          clickGrid[a][b] = Integer.parseInt(br.readLine());
         }
       }      
       br.close(); 
@@ -235,13 +251,13 @@ public class MallKing extends JPanel
   public void savetemp()
   {
     try { 
-      FileWriter fw = new FileWriter("mallTemp.txt"); 
+      FileWriter fw = new FileWriter("gridTemp.txt"); 
       PrintWriter pw = new PrintWriter(fw);
       for (int a=1;a<23;a++)
       {
         for (int b=1;b<13;b++)
         {
-          pw.println(mallstore[a][b]);
+          pw.println(clickGrid[a][b]);
         }
       }      
       pw.close(); 
@@ -277,7 +293,6 @@ public class MallKing extends JPanel
   @Override public void paint(Graphics g) 
   {
     super.paint(g);
-    Graphics2D g2d = (Graphics2D) g;    
     if(!playGame)
     {
       try
@@ -390,6 +405,25 @@ public class MallKing extends JPanel
         } catch (IOException e){}
         g.drawImage(img, 0, 0, null);
       }
+      if (confirm==true)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Confirm.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+        try
+        {
+          Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
+          
+          font = font.deriveFont(48F);
+          g.setFont(font);
+        }
+        catch (IOException e){} catch (FontFormatException e){}
+        Color fontcolor = new Color(96,125,139);
+        g.setColor (fontcolor);
+        g.drawString(String.valueOf(menu)+"?",480,405);
+      }
     }
   }
   
@@ -400,17 +434,22 @@ public class MallKing extends JPanel
     frame.add(m); 
     frame.setSize(1280, 760);
     frame.setVisible(true); 
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     while (true) {
       {
         if(newGame)
         {
           m.loadNew();
-          m.loadgrid("mallLoad.txt");
+          m.loadgrid("gridLoad.txt");
           loadGame=false;
           playGame=true;   
           newGame=false;
           changeStore=false;
+          settings=false;
+          storeMenu=false;
+          pickStore=false;
+          confirm=false;
+          isMuted=false;
         }
         else if(playGame)
         {
@@ -418,7 +457,13 @@ public class MallKing extends JPanel
         }
         else if(loadGame)
         {
-          m.loading();
+          m.loading(); 
+          changeStore=false;
+          settings=false;
+          storeMenu=false;
+          pickStore=false;
+          confirm=false;
+          isMuted=false;
         }
         m.repaint(); 
         Thread.sleep(10); 
