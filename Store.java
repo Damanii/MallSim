@@ -1,18 +1,10 @@
-import javax.swing.*; 
-import java.awt.*;
-import javax.imageio.*;
-import java.io.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 public class Store
 {
   private int size;
   private int stars;
   private int profitability;
   private int cost;
+  public String name;
   public Store()
   {
   }
@@ -22,6 +14,8 @@ public class Store
     this.stars=stars;
     this.profitability=profitability;
     this.cost=cost;
+    this.name=Name;
+    
   }
   public double calculateRevenue()
   {
@@ -40,7 +34,7 @@ public class Store
     else
     {
     }
-  return 0;
+    return 0;
   }
   public double calculateExpenses()
   {
