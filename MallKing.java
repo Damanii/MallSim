@@ -119,11 +119,11 @@ public class MallKing extends JPanel
           settings=false;
           
           savetemp();
-          loadpicker();
+          loadgrid("storePicker.txt");
         }
         if(changeStore==true&&mallstore[clickX][clickY]==817)
         {
-          loadtemp();
+          loadgrid("mallTemp.txt");
           changeStore=false;
           
         }
@@ -181,18 +181,7 @@ public class MallKing extends JPanel
       paused=true;
       br.close(); 
     } catch(IOException e){}
-    try { 
-      FileReader fr = new FileReader("mallSave.txt"); 
-      BufferedReader br = new BufferedReader(fr); 
-      for (int a=1;a<23;a++)
-      {
-        for (int b=1;b<13;b++)
-        {
-          mallstore[a][b] = Integer.parseInt(br.readLine());
-        }
-      }      
-      br.close(); 
-    } catch(IOException e){}
+    loadgrid("mallSave.txt");
     loadGame=false;
     playGame=true;    
   }
@@ -227,46 +216,10 @@ public class MallKing extends JPanel
     } catch(IOException e){}
   }
   
-  public void loadstores()
+  public void loadgrid(String file)
   {
     try { 
-      FileReader fr = new FileReader("mallLoad.txt"); 
-      BufferedReader br = new BufferedReader(fr); 
-      for (int a=1;a<23;a++)
-      {
-        for (int b=1;b<13;b++)
-        {
-          mallstore[a][b] = Integer.parseInt(br.readLine());
-        }
-      }      
-      br.close(); 
-    } catch(IOException e){}
-    loadGame=false;
-    playGame=true;   
-    newGame=false;
-    changeStore=false;
-  }
-  
-  public void loadpicker()
-  {
-    try { 
-      FileReader fr = new FileReader("storePicker.txt"); 
-      BufferedReader br = new BufferedReader(fr); 
-      for (int a=1;a<23;a++)
-      {
-        for (int b=1;b<13;b++)
-        {
-          mallstore[a][b] = Integer.parseInt(br.readLine());
-        }
-      }      
-      br.close(); 
-    } catch(IOException e){}
-  }
-  
-  public void loadtemp()
-  {
-    try { 
-      FileReader fr = new FileReader("mallTemp.txt"); 
+      FileReader fr = new FileReader(file); 
       BufferedReader br = new BufferedReader(fr); 
       for (int a=1;a<23;a++)
       {
@@ -453,7 +406,11 @@ public class MallKing extends JPanel
         if(newGame)
         {
           m.loadNew();
-          m.loadstores();
+          m.loadgrid("mallLoad.txt");
+          loadGame=false;
+          playGame=true;   
+          newGame=false;
+          changeStore=false;
         }
         else if(playGame)
         {
