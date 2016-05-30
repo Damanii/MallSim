@@ -3,19 +3,22 @@ public class Store
   private int size;
   private int stars;
   private int profitability;
-  private int cost;
+  public int cost;
   public String name;
+  public boolean placed;
+  public int counter;
   public Store()
   {
   }
-  public Store(String Name, int size, int stars, int profitability, int cost)
+  public Store(String Name, int size, int stars, int profitability, int cost,int counter)
   {
     this.size=size;
     this.stars=stars;
     this.profitability=profitability;
     this.cost=cost;
     this.name=Name;
-    
+    this.placed=false;
+    this.counter=counter;
   }
   public double calculateRevenue()
   {

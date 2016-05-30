@@ -22,12 +22,14 @@ public class MallKing extends JPanel
   private static Boolean storeMenu=false;
   private static Boolean pickStore=false;
   private static Boolean confirm=false;
+  private static Boolean overpriced=false;
   private static int cash;
   private static int year;
   private static int month;
   private static int day;
   private static int intro=59;
   private static int menu=0;
+  private static int choice=0;
   private static double profit;
   private static double balance;
   private static double expenses;
@@ -36,6 +38,7 @@ public class MallKing extends JPanel
   public static int clickX;
   public static int clickY;
   int[][] clickGrid = new int[23][13];
+  Store[] choicelist = new Store[9];
   public static int daylength;
   public static int daymod;
   
@@ -97,7 +100,7 @@ public class MallKing extends JPanel
         {
           settings=!settings;
         }
-        if(clickGrid[clickX][clickY]<=133&&changeStore==false)
+        else if(clickGrid[clickX][clickY]<=133&&changeStore==false)
         {
           if (storeMenu==true&&menu==clickGrid[clickX][clickY])
           {
@@ -110,38 +113,67 @@ public class MallKing extends JPanel
             menu=clickGrid[clickX][clickY];
           }  
         }
-        if(clickGrid[clickX][clickY]==811&&storeMenu==true&&changeStore==false)
+        else if(clickGrid[clickX][clickY]==811&&storeMenu==true&&changeStore==false)
         {
           storeMenu=false;
           menu=0;
         }
-        if(clickGrid[clickX][clickY]==813&&storeMenu==true)
+        else if(clickGrid[clickX][clickY]==813&&storeMenu==true&&changeStore==false&&confirm==false)
         {
-          changeStore=true;
-          settings=false;
           savetemp();
           loadgrid("gridPicker.txt");
+          choices();
+          changeStore=true;
+          settings=false;
+          //load choices
         }
-        if(changeStore==true&&clickGrid[clickX][clickY]==817)
+        else if(changeStore==true&&clickGrid[clickX][clickY]==817)
         {
           loadgrid("gridTemp.txt");
           changeStore=false;
         }
-        if(clickGrid[clickX][clickY]>900&&clickGrid[clickX][clickY]<999)
+        else if(clickGrid[clickX][clickY]>900&&clickGrid[clickX][clickY]<999)
         {
-          confirm=true;
-          loadgrid("gridConfirm.txt");
+          choice=clickGrid[clickX][clickY]-901;
+          if(choicelist[choice].cost>cash)
+          {
+            overpriced=true;
+            loadgrid("gridOverpriced.txt");
+          }
+          else
+          {
+            loadgrid("gridConfirm.txt");
+            confirm=true;         
+          }
         }
-        if(clickGrid[clickX][clickY]==1001)
+        else if(clickGrid[clickX][clickY]==1001)
         {
           loadgrid("gridTemp.txt");
           confirm=false;
-          changeStore=false; 
+          changeStore=false;
+          storeMenu=false;
+          for (int a=1;a<23;a++)
+          {
+            for (int b=1;b<13;b++)
+            {
+              if(clickGrid[a][b]==menu)
+              {
+                clickGrid[a][b]=choicelist[choice].counter;
+              }
+            }
+          }  
+          choicelist[choice].placed=true;
+          cash-=choicelist[choice].cost;
         }
-        if(clickGrid[clickX][clickY]==1002)
+        else if(clickGrid[clickX][clickY]==1002)
         {
           loadgrid("gridPicker.txt");
           confirm=false;
+        }
+        else if(clickGrid[clickX][clickY]==1100)
+        {
+          loadgrid("gridPicker.txt");
+          overpriced=false;
         }
       }       
     }); 
@@ -155,7 +187,7 @@ public class MallKing extends JPanel
         int stars = Integer.parseInt(br.readLine());
         int profitability = Integer.parseInt(br.readLine());
         int cost = Integer.parseInt(br.readLine());
-        store[i]=(new Store(name, size, stars, profitability, cost));
+        store[i]=(new Store(name, size, stars, profitability, cost,i));
       }
       br.close(); 
     }
@@ -176,6 +208,20 @@ public class MallKing extends JPanel
     storeMenu=false;
     paused=true;
     changeStore=false;
+  }
+  
+  public void choices()
+  {
+    //store[9].placed=true;
+    int counter=0;
+    for(int i=0;i<48; i++)
+    {
+      if(store[i].placed==false&&counter<9)
+      {
+        choicelist[counter]=store[i];
+        counter++;
+      }
+    }      
   }
   
   public void loading()
@@ -351,7 +397,6 @@ public class MallKing extends JPanel
         g.setColor (fontcolor); 
         try {
           Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
-          
           font = font.deriveFont(36F);
           g.setFont(font);
         }
@@ -359,10 +404,12 @@ public class MallKing extends JPanel
         if (menu<100)
         {
           g.drawString(store[menu].name,5,160);
+          g.drawString("Replace Store",62,344);
         }
         else
         {
           g.drawString(String.valueOf(menu),5,160);
+          g.drawString("Add Store",62,344);
         }
       }   
       if (changeStore==true&&storeMenu==true)
@@ -371,7 +418,13 @@ public class MallKing extends JPanel
         {
           img = ImageIO.read(new File("ChangeStore.png"));
           g.drawImage(img, 0, 0, null);
-        } catch (IOException e){}
+          for(int i=0;i<9; i++)
+          {
+            g.drawString(choicelist[i].name,128, i*60+166);
+            g.drawString(String.valueOf(choicelist[i].cost),400, i*60+166);
+          }
+        }      
+        catch (IOException e){}
       }  
       if (daymod!=15)
       { 
@@ -405,6 +458,24 @@ public class MallKing extends JPanel
         } catch (IOException e){}
         g.drawImage(img, 0, 0, null);
       }
+      if (overpriced==true)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Overpriced.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+        try
+        {
+          Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
+          font = font.deriveFont(48F);
+          g.setFont(font);
+          Color fontcolor = new Color(96,125,139);
+          g.setColor (fontcolor);
+        }
+        catch (IOException e){} catch (FontFormatException e){}
+        g.drawString(String.valueOf(choicelist[choice].name),480,400);
+      }
       if (confirm==true)
       { 
         try
@@ -415,16 +486,25 @@ public class MallKing extends JPanel
         try
         {
           Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("A.ttf"));
-          
           font = font.deriveFont(48F);
           g.setFont(font);
         }
         catch (IOException e){} catch (FontFormatException e){}
         Color fontcolor = new Color(96,125,139);
         g.setColor (fontcolor);
-        g.drawString(String.valueOf(menu)+"?",480,405);
+        g.drawString(String.valueOf(choicelist[choice].name),480,400);
       }
     }
+  }
+  
+  public void reset()
+  {
+    changeStore=false;
+    settings=false;
+    storeMenu=false;
+    pickStore=false;
+    confirm=false;
+    isMuted=false;
   }
   
   public static void main(String[]args) throws InterruptedException
@@ -444,12 +524,7 @@ public class MallKing extends JPanel
           loadGame=false;
           playGame=true;   
           newGame=false;
-          changeStore=false;
-          settings=false;
-          storeMenu=false;
-          pickStore=false;
-          confirm=false;
-          isMuted=false;
+          m.reset();
         }
         else if(playGame)
         {
@@ -458,12 +533,7 @@ public class MallKing extends JPanel
         else if(loadGame)
         {
           m.loading(); 
-          changeStore=false;
-          settings=false;
-          storeMenu=false;
-          pickStore=false;
-          confirm=false;
-          isMuted=false;
+          m.reset();
         }
         m.repaint(); 
         Thread.sleep(10); 
