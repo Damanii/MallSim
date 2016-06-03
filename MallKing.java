@@ -37,6 +37,9 @@ public class MallKing extends JPanel
   Store[] store = new Store[48];
   public static int clickX;
   public static int clickY;
+  int[] locX = new int[33];
+  int[] locY = new int[33];
+  int[] locsize = new int[33];
   int[][] clickGrid = new int[23][13];
   Store[] choicelist = new Store[9];
   public static int daylength;
@@ -51,8 +54,8 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        System.out.println(clickX+":"+clickY);
-        System.out.println(clickGrid[clickX][clickY]);
+        System.out.println(mouseX+":"+mouseY);
+        //System.out.println(clickGrid[clickX][clickY]);
         if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;
@@ -118,15 +121,33 @@ public class MallKing extends JPanel
           storeMenu=false;
           menu=0;
         }
-        else if(clickGrid[clickX][clickY]==813&&storeMenu==true&&changeStore==false&&confirm==false)
+        else if(clickGrid[clickX][clickY]==812&&storeMenu==true&&changeStore==false&&confirm==false)
         {
           savetemp();
           loadgrid("gridPicker.txt");
           choices();
           changeStore=true;
           settings=false;
-          //load choices
         }
+        else if(clickGrid[clickX][clickY]==813&&storeMenu==true&&changeStore==false)
+        {
+//Promotions
+        } 
+        else if(clickGrid[clickX][clickY]==818)
+        {
+          storeMenu=false;
+          for (int a=1;a<23;a++)
+          {
+            for (int b=1;b<13;b++)
+            {
+              if(clickGrid[a][b]==store[menu].counter)
+              {
+                clickGrid[a][b]=store[menu].location;
+              }
+            }
+          }  
+          store[menu].isPlaced=false;
+        } 
         else if(changeStore==true&&clickGrid[clickX][clickY]==817)
         {
           loadgrid("gridTemp.txt");
@@ -152,6 +173,7 @@ public class MallKing extends JPanel
           confirm=false;
           changeStore=false;
           storeMenu=false;
+          choicelist[choice].location=menu;
           for (int a=1;a<23;a++)
           {
             for (int b=1;b<13;b++)
@@ -162,7 +184,7 @@ public class MallKing extends JPanel
               }
             }
           }  
-          choicelist[choice].placed=true;
+          choicelist[choice].isPlaced=true;
           cash-=choicelist[choice].cost;
         }
         else if(clickGrid[clickX][clickY]==1002)
@@ -187,7 +209,19 @@ public class MallKing extends JPanel
         int stars = Integer.parseInt(br.readLine());
         int profitability = Integer.parseInt(br.readLine());
         int cost = Integer.parseInt(br.readLine());
-        store[i]=(new Store(name, size, stars, profitability, cost,i));
+        store[i]=(new Store(name, size, stars, profitability, cost,i,false));
+      }
+      br.close(); 
+    }
+    catch(IOException e){}
+    try { 
+      FileReader fr = new FileReader("Picture.txt"); 
+      BufferedReader br = new BufferedReader(fr);
+      for(int i=0;i<33; i++)
+      {
+        locsize[i]=Integer.parseInt(br.readLine());
+        locX[i]=Integer.parseInt(br.readLine());
+        locY[i]=Integer.parseInt(br.readLine());
       }
       br.close(); 
     }
@@ -216,7 +250,7 @@ public class MallKing extends JPanel
     int counter=0;
     for(int i=0;i<48; i++)
     {
-      if(store[i].placed==false&&counter<9)
+      if(store[i].isPlaced==false&&counter<9)
       {
         choicelist[counter]=store[i];
         counter++;
@@ -319,13 +353,30 @@ public class MallKing extends JPanel
   {
     if(!paused)
     {
+      for(int i=0;i<48; i++)
+      {
+        if(store[i].getIsPlaced())
+        {
+          store[i].calculateExpenses();
+        }
+      }
       if(day>=daylength)
       {
         this.month++;
+        for(int i=0;i<48; i++)
+        {
+          //store[i].calculateRevenue();
+          if(store[i].getIsPlaced())
+          {
+            cash+=store[i].calculateRevenue();
+            System.out.println();
+          }
+        }
         this.day=daymod;
       }
       if(month>12)
       {
+        
         this.year++;
         this.month=1;
       }
@@ -372,6 +423,27 @@ public class MallKing extends JPanel
       } 
       catch (IOException e){} catch (FontFormatException e){}
       
+      for (int a=0;a<34;a++)
+      {
+        if (store[a].isPlaced==true)
+        {
+          String location="";
+          if (locsize[store[a].location-101]==1)
+          {
+            location=(store[a].counter+1)+"s.png";
+          }
+          else
+          {
+            location+=(store[a].counter+1)+".png";
+          }
+          try
+          {
+            img = ImageIO.read(new File(location));
+          } catch (IOException e){}
+          g.drawImage(img, locX[store[a].location-101], locY[store[a].location-101], null);
+        }
+      }
+      
       if (settings==true)
       { 
         try
@@ -404,12 +476,19 @@ public class MallKing extends JPanel
         if (menu<100)
         {
           g.drawString(store[menu].name,5,160);
-          g.drawString("Replace Store",62,344);
+          g.drawString("Replace Store",64,285);
+          try
+          {
+            img = ImageIO.read(new File("Remove.png"));
+            g.drawImage(img, 0, 0, null);
+            img = ImageIO.read(new File("Promotions.png"));
+            g.drawImage(img, 0, 0, null);
+          }catch (IOException e){}
         }
         else
         {
-          g.drawString(String.valueOf(menu),5,160);
-          g.drawString("Add Store",62,344);
+          g.drawString("No Store",5,160);
+          g.drawString("Add Store",64,285);
         }
       }   
       if (changeStore==true&&storeMenu==true)
@@ -505,6 +584,11 @@ public class MallKing extends JPanel
     pickStore=false;
     confirm=false;
     isMuted=false;
+  }
+  public void options()
+  {
+     JFrame frame = new JFrame("Cheat Code");
+     String code = JOptionPane.showInputDialog(frame, "Please Enter the Cheat Code");
   }
   
   public static void main(String[]args) throws InterruptedException
