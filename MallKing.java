@@ -54,8 +54,7 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        System.out.println(mouseX+":"+mouseY);
-        //System.out.println(clickGrid[clickX][clickY]);
+        System.out.println(clickX+":"+clickY);
         if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;

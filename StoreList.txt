@@ -1,9 +1,9 @@
-Ameers.A/V
+Ameers A/V
 2
 1
 1
 10000
-American.Eagle
+American Eagle
 3
 3
 2
@@ -13,17 +13,17 @@ Armani
 5
 8
 3000000
-Banana.Republic
+Banana Republic
 3
 3
 5
 200000
-Bath.And.Body
+Bath And Body
 2
 2
 4
 70000
-Best.Buy
+Best Buy
 2
 2
 6
@@ -43,12 +43,12 @@ Coach
 4
 7
 2000000
-Donalds.Kilts
+Donalds Kilts
 2
 1
 1
 10000
-Forever.21
+Forever 21
 2
 2
 4
@@ -78,7 +78,7 @@ H&M
 3
 4
 500000
-Hudsons.Bay
+Hudsons Bay
 5
 3
 8
@@ -93,17 +93,17 @@ J Crew
 4
 5
 750000
-Jamies.Botique
+Jamies Botique
 2
 1
 1
 10000
-Kate.Spade
+Kate Spade
 2
 5
 9
 1000000
-Kevins.Kimchi
+Kevins Kimchi
 2
 1
 1
@@ -133,7 +133,7 @@ MAC
 4
 9
 2500000
-Matthews.Language.Center
+Matthews Language Center
 2
 1
 1
@@ -148,7 +148,7 @@ Nike
 4
 6
 1500000
-Old.Navy
+Old Navy
 3
 1
 4
@@ -168,7 +168,7 @@ Rockport
 2
 4
 600000
-Saad's.Spy.Shack
+Saad's Spy Shack
 2
 1
 1
@@ -198,7 +198,7 @@ Sketchers
 2
 2
 400000
-Steve.Madden
+Steve Madden
 2
 3
 6
@@ -213,7 +213,7 @@ TD
 3
 10
 5000000
-Top.Man
+Top Man
 2
 4
 6
@@ -223,7 +223,7 @@ Versace
 5
 10
 7000000
-Victorias.Secret
+Victorias Secret
 3
 4
 7

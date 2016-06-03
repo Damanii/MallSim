@@ -16,10 +16,6 @@ import java.awt.Container;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
-
-//encrypt cheat code 
-
-
 public class Store
 {
   private int size;
