@@ -7,6 +7,8 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
+//LCD SOUNDSYSTEM
+//Underworld
 
 public class MallKing extends JPanel
 {
@@ -54,7 +56,7 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        System.out.println(clickX+":"+clickY);
+        //System.out.println(clickX+":"+clickY);
         if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;
@@ -276,6 +278,20 @@ public class MallKing extends JPanel
       paused=true;
       br.close(); 
     } catch(IOException e){}
+    try { 
+      FileReader fr = new FileReader("saveStores.txt"); 
+      BufferedReader br = new BufferedReader(fr); 
+      for(int i=0;i<48; i++)
+      {
+        store[i].isPlaced=Boolean.parseBoolean(br.readLine());
+        store[i].counter=Integer.parseInt(br.readLine());
+        store[i].x=Integer.parseInt(br.readLine());
+        store[i].y=Integer.parseInt(br.readLine());
+        store[i].locsize=Integer.parseInt(br.readLine());
+        store[i].location=Integer.parseInt(br.readLine());
+      }
+      br.close();
+    } catch(IOException e){}
     loadgrid("gridSave.txt");
     loadGame=false;
     playGame=true;    
@@ -308,6 +324,21 @@ public class MallKing extends JPanel
         }
       }      
       pw.close(); 
+    }catch(IOException e){}
+    
+    try { 
+      FileWriter fw = new FileWriter("saveStores.txt"); 
+      PrintWriter pw = new PrintWriter(fw);
+      for(int i=0;i<48; i++)
+      {
+        pw.println(store[i].isPlaced);
+        pw.println(store[i].counter);
+        pw.println(store[i].x);
+        pw.println(store[i].y);
+        pw.println(store[i].locsize);
+        pw.println(store[i].location);
+      }
+      pw.close();
     } catch(IOException e){}
   }
   
@@ -368,7 +399,7 @@ public class MallKing extends JPanel
           if(store[i].getIsPlaced())
           {
             cash+=store[i].calculateRevenue();
-            System.out.println();
+            //System.out.println();
           }
         }
         this.day=daymod;
@@ -586,8 +617,8 @@ public class MallKing extends JPanel
   }
   public void options()
   {
-     JFrame frame = new JFrame("Cheat Code");
-     String code = JOptionPane.showInputDialog(frame, "Please Enter the Cheat Code");
+    JFrame frame = new JFrame("Cheat Code");
+    String code = JOptionPane.showInputDialog(frame, "Please Enter the Cheat Code");
   }
   
   public static void main(String[]args) throws InterruptedException

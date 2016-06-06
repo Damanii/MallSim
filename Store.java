@@ -1,20 +1,6 @@
-import javax.swing.*; 
-import java.awt.*;
-import java.io.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Font;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.lang.Object;
-import java.awt.Component;
-import java.awt.Container;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 
 public class Store
 {
@@ -52,22 +38,22 @@ public class Store
     //System.out.println(name);
     if(stars==1)
     {
-      System.out.println(profitability*stars*40*random-500);
+      //System.out.println(profitability*stars*40*random-500);
       return profitability*stars*20*random-1500;
     }
     else if(stars==2)
     {
-      System.out.println(profitability*stars*50*random-2000*(5-stars));
+      //System.out.println(profitability*stars*50*random-2000*(5-stars));
       return profitability*stars*40*random-2000;
     }
     else if(stars==3)
     {
-      System.out.println(profitability*stars*60*random-3000*(5-stars));
+      //System.out.println(profitability*stars*60*random-3000*(5-stars));
       return profitability*stars*60*random-4000;
     }
     else if(stars==4)
     {
-      System.out.println(profitability*stars*70*random-4000*(5-stars));
+      //System.out.println(profitability*stars*70*random-4000*(5-stars));
       return profitability*stars*80*random-6000;
     }
     else
