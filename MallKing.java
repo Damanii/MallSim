@@ -7,8 +7,6 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
-//LCD SOUNDSYSTEM
-//Underworld
 
 public class MallKing extends JPanel
 {
@@ -56,7 +54,8 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        //System.out.println(clickX+":"+clickY);
+        //System.out.println(mouseX+":"+mouseY);
+        System.out.println(clickGrid[clickX][clickY]);
         if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;
@@ -124,15 +123,21 @@ public class MallKing extends JPanel
         }
         else if(clickGrid[clickX][clickY]==812&&storeMenu==true&&changeStore==false&&confirm==false)
         {
+          System.out.println(menu);
           savetemp();
           loadgrid("gridPicker.txt");
           choices();
           changeStore=true;
           settings=false;
         }
-        else if(clickGrid[clickX][clickY]==813&&storeMenu==true&&changeStore==false)
+        else if(clickGrid[clickX][clickY]==813&&storeMenu==true&&changeStore==false&&store[menu].isBurned==false)
         {
 //Promotions
+        } 
+        else if(clickGrid[clickX][clickY]==813&&storeMenu==true&&changeStore==false&&store[menu].isBurned==true)
+        {
+          System.out.println("FIRE");
+//Replace Store
         } 
         else if(clickGrid[clickX][clickY]==818)
         {
@@ -148,6 +153,7 @@ public class MallKing extends JPanel
             }
           }  
           store[menu].isPlaced=false;
+          store[menu].isBurned=false;
         } 
         else if(changeStore==true&&clickGrid[clickX][clickY]==817)
         {
@@ -168,7 +174,49 @@ public class MallKing extends JPanel
             confirm=true;         
           }
         }
-        else if(clickGrid[clickX][clickY]==1001)
+        else if(clickGrid[clickX][clickY]==1001&&menu>100)
+        {
+          loadgrid("gridTemp.txt");
+          confirm=false;
+          changeStore=false;
+          storeMenu=false;
+          choicelist[choice].location=menu;
+          for (int a=1;a<23;a++)
+          {
+            for (int b=1;b<13;b++)
+            {
+              if(clickGrid[a][b]==menu)
+              {
+                clickGrid[a][b]=choicelist[choice].counter;
+              }
+            }
+          }  
+          choicelist[choice].isPlaced=true;
+          cash-=choicelist[choice].cost;
+        }
+         else if(clickGrid[clickX][clickY]==1001&&menu<100)
+        {
+          loadgrid("gridTemp.txt");
+          confirm=false;
+          changeStore=false;
+          storeMenu=false;
+          choicelist[choice].location=store[menu].location;
+                    store[menu].isPlaced=false;
+          store[menu].isBurned=false;
+          for (int a=1;a<23;a++)
+          {
+            for (int b=1;b<13;b++)
+            {
+              if(clickGrid[a][b]==menu)
+              {
+                clickGrid[a][b]=choicelist[choice].counter;
+              }
+            }
+          }  
+          choicelist[choice].isPlaced=true;
+          cash-=choicelist[choice].cost;
+        }
+          else if(clickGrid[clickX][clickY]==1001)
         {
           loadgrid("gridTemp.txt");
           confirm=false;
@@ -231,7 +279,7 @@ public class MallKing extends JPanel
   
   public void loadNew()
   {
-    cash = 500000;
+    cash = 500000000;
     year = 1;
     month = 1;
     day  = 120;
@@ -243,6 +291,16 @@ public class MallKing extends JPanel
     storeMenu=false;
     paused=true;
     changeStore=false;
+    for(int i=0;i<48; i++)
+    {
+      store[i].isPlaced=false;
+      store[i].counter=0;
+      store[i].x=0;
+      store[i].y=0;
+      store[i].locsize=0;
+      store[i].location=0;
+      store[i].isBurned=false;
+    }
   }
   
   public void choices()
@@ -278,6 +336,7 @@ public class MallKing extends JPanel
       paused=true;
       br.close(); 
     } catch(IOException e){}
+    loadgrid("gridSave.txt");
     try { 
       FileReader fr = new FileReader("saveStores.txt"); 
       BufferedReader br = new BufferedReader(fr); 
@@ -292,7 +351,6 @@ public class MallKing extends JPanel
       }
       br.close();
     } catch(IOException e){}
-    loadgrid("gridSave.txt");
     loadGame=false;
     playGame=true;    
   }
@@ -314,19 +372,6 @@ public class MallKing extends JPanel
       pw.close(); 
     } catch(IOException e){}
     try { 
-      FileWriter fw = new FileWriter("gridSave.txt"); 
-      PrintWriter pw = new PrintWriter(fw);
-      for (int a=1;a<23;a++)
-      {
-        for (int b=1;b<13;b++)
-        {
-          pw.println(clickGrid[a][b]);
-        }
-      }      
-      pw.close(); 
-    }catch(IOException e){}
-    
-    try { 
       FileWriter fw = new FileWriter("saveStores.txt"); 
       PrintWriter pw = new PrintWriter(fw);
       for(int i=0;i<48; i++)
@@ -339,6 +384,18 @@ public class MallKing extends JPanel
         pw.println(store[i].location);
       }
       pw.close();
+    } catch(IOException e){}
+    try { 
+      FileWriter fw = new FileWriter("gridSave.txt"); 
+      PrintWriter pw = new PrintWriter(fw);
+      for (int a=1;a<23;a++)
+      {
+        for (int b=1;b<13;b++)
+        {
+          pw.println(clickGrid[a][b]);
+        }
+      }      
+      pw.close(); 
     } catch(IOException e){}
   }
   
@@ -399,7 +456,7 @@ public class MallKing extends JPanel
           if(store[i].getIsPlaced())
           {
             cash+=store[i].calculateRevenue();
-            //System.out.println();
+            System.out.println();
           }
         }
         this.day=daymod;
@@ -455,7 +512,7 @@ public class MallKing extends JPanel
       
       for (int a=0;a<34;a++)
       {
-        if (store[a].isPlaced==true)
+        if (store[a].isPlaced==true||(store[a].isPlaced==false&&store[a].isBurned==true))
         {
           String location="";
           if (locsize[store[a].location-101]==1)
@@ -469,6 +526,14 @@ public class MallKing extends JPanel
           try
           {
             img = ImageIO.read(new File(location));
+          } catch (IOException e){}
+          g.drawImage(img, locX[store[a].location-101], locY[store[a].location-101], null);
+        }
+        if (store[a].isBurned==true)
+        {
+          try
+          {
+            img = ImageIO.read(new File("Fire.png"));
           } catch (IOException e){}
           g.drawImage(img, locX[store[a].location-101], locY[store[a].location-101], null);
         }
