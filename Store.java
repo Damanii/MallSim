@@ -1,11 +1,30 @@
+import javax.swing.*; 
+import java.awt.*;
+import java.io.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Font;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import java.lang.Object;
+import java.awt.Component;
+import java.awt.Container;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+
+
+//encrypt cheat code 
+//make user get less money when store is placed early
 
 public class Store
 {
-  public int size;
-  public int stars;
-  public int profitability;
+  private int size;
+  private int stars;
+  private int profitability;
   public int cost;
   public String name;
   public boolean isPlaced;
@@ -17,22 +36,19 @@ public class Store
   public boolean isBurned;
   public int timeRun;
   public int m=1;//used for doubling profitability
+  public int dayPlaced;
   public Store()
   {
   }
-  public Store(String name, int size, int stars, int profitability, int cost, int counter, boolean isPlaced, int x, int y, int locsize, int location)
+  public Store(String Name, int size, int stars, int profitability, int cost,int counter, boolean isPlaced)
   {
     this.size=size;
     this.stars=stars;
     this.profitability=profitability;
     this.cost=cost;
-    this.name=name;
-    this.isPlaced=isPlaced;
+    this.name=Name;
+    this.isPlaced=false;
     this.counter=counter;
-    this.x=x;
-    this.y=y;
-    this.location=location;
-    this.locsize=locsize;
   }
   public boolean getIsPlaced()
   {
@@ -53,19 +69,19 @@ public class Store
     int random = (int)(Math.random()*40);
     if(stars==1)
     {
-      return profitability*m*stars*40*random-500;
+      return (profitability*stars*40*random-500)*m;
     }
     else if(stars==2)
     {
-      return profitability*m*stars*50*random-2000*(5-stars);
+      return (profitability*m*stars*50*random-2000*(5-stars))*m;
     }
     else if(stars==3)
     {
-      return profitability*m*stars*60*random-3000*(5-stars);
+      return (profitability*m*stars*60*random-3000*(5-stars))*m;
     }
     else if(stars==4)
     {
-      return profitability*m*stars*70*random-4000*(5-stars);
+      return (profitability*m*stars*70*random-4000*(5-stars)*m);
     }
     else
     {
@@ -73,37 +89,47 @@ public class Store
     }
   }
   
-  public double promotion()
+  public double promotion(int cash)
   {
     JFrame frame = new JFrame("Promotion");
-    String runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
-    System.out.println(runTime);
-    if(runTime!=null)
+    if(timeRun-1>0)
     {
-      timeRun=Integer.parseInt(runTime);
-      while(!isInteger(runTime))
+      JOptionPane.showMessageDialog(frame,"The promotion still has "+ (timeRun-1) +" month(s) left");
+      return 0; 
+    }
+    double promotionCost=0;
+      do
       {
-        if(isInteger(runTime))
+        String runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
+        System.out.println(runTime);
+        if(runTime!=null)
         {
           timeRun=Integer.parseInt(runTime);
+          while(!isInteger(runTime))
+          {
+            if(isInteger(runTime))
+            {
+              timeRun=Integer.parseInt(runTime);
+            }
+            else
+            {
+              runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
+            }
+          }
+          promotionCost=(((cost*0.05*(timeRun*30))/5.0));
         }
-        else
-        {
-          runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
-        }
-      }
-      double promotionCost=(((cost*0.05*(timeRun*30))/5.0));
+      }while(promotionCost>cash);
+      
       String promo=String.valueOf(promotionCost);
       Object[] options = {"Run Promo","Cancel"};
       int n = JOptionPane.showOptionDialog(frame,"This promotion will cost $"+ promo,"Promotion",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
       if(n==0)
       {
         timeRun++;
+        m=2;
         return promotionCost;
       }
       return 0;
-    }
-    return 0;
   }
   
   public boolean isInteger( String input ) {

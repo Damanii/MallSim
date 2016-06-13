@@ -20,6 +20,7 @@ public class MallKing extends JPanel
   private static Boolean isMuted=false;
   private static Boolean changeStore=false;
   private static Boolean storeMenu=false;
+  private static Boolean pickStore=false;
   private static Boolean confirm=false;
   private static Boolean overpriced=false;
   private static int cash;
@@ -29,11 +30,13 @@ public class MallKing extends JPanel
   private static int intro=59;
   private static int menu=0;
   private static int choice=0;
+  private static double profit;
+  private static double balance;
+  private static double expenses;
   private Boolean paused=true;
   Store[] store = new Store[48];
   public static int clickX;
   public static int clickY;
-  public static int choiceCounter;
   int[] locX = new int[33];
   int[] locY = new int[33];
   int[] locsize = new int[33];
@@ -41,6 +44,14 @@ public class MallKing extends JPanel
   Store[] choicelist = new Store[9];
   public static int daylength;
   public static int daymod;
+  private String who;
+  private double multiplier;
+  
+  
+  public double getCash()
+  {
+    return cash;
+  }
   
   public MallKing()
   {
@@ -51,8 +62,8 @@ public class MallKing extends JPanel
         mouseY=me.getY();
         clickX=mouseX/60+1;
         clickY=mouseY/60+1;
-        //System.out.println(clickX+":"+clickY);
-        System.out.println(clickGrid[clickX][clickY]);
+        System.out.println(mouseX+":"+mouseY);
+        //System.out.println(clickGrid[clickX][clickY]);
         if((mouseX>=362&&mouseX<=622&&mouseY>=530&&mouseY<=600)&&!playGame&&!loadGame&&intro==60)
         {
           newGame=true;
@@ -120,17 +131,15 @@ public class MallKing extends JPanel
         }
         else if(clickGrid[clickX][clickY]==812&&storeMenu==true&&changeStore==false&&confirm==false)
         {
-          saveGrid("gridTemp.txt");
+          savetemp();
           loadgrid("gridPicker.txt");
-          choices(0);
-          choiceCounter=0;
-          choices(choiceCounter);
+          choices();
           changeStore=true;
           settings=false;
         }
         else if(clickGrid[clickX][clickY]==813&&storeMenu==true&&changeStore==false)
         {
-          cash-=store[menu].promotion();
+          cash-=store[menu].promotion(cash);
         } 
         else if(clickGrid[clickX][clickY]==818)
         {
@@ -152,7 +161,7 @@ public class MallKing extends JPanel
           loadgrid("gridTemp.txt");
           changeStore=false;
         }
-        else if(clickGrid[clickX][clickY]>900&&clickGrid[clickX][clickY]<910)
+        else if(clickGrid[clickX][clickY]>900&&clickGrid[clickX][clickY]<999)
         {
           choice=clickGrid[clickX][clickY]-901;
           if(choicelist[choice].cost>cash)
@@ -166,25 +175,13 @@ public class MallKing extends JPanel
             confirm=true;         
           }
         }
-        else if(clickGrid[clickX][clickY]==910&&choiceCounter>0)
-        {
-          choices(choiceCounter-9);
-        }
-        else if(clickGrid[clickX][clickY]==911&&choiceCounter<=48)
-        {
-          choices(choiceCounter+9);
-        }
         else if(clickGrid[clickX][clickY]==1001)
         {
-          choicelist[choice].location=menu-101;
-          choicelist[choice].isPlaced=true;
-          choicelist[choice].x=locX[menu-101];
-          choicelist[choice].y=locY[menu-101];
-          cash-=choicelist[choice].cost;
+          loadgrid("gridTemp.txt");
           confirm=false;
           changeStore=false;
           storeMenu=false;
-          loadgrid("gridTemp.txt");
+          choicelist[choice].location=menu;
           for (int a=1;a<23;a++)
           {
             for (int b=1;b<13;b++)
@@ -194,7 +191,9 @@ public class MallKing extends JPanel
                 clickGrid[a][b]=choicelist[choice].counter;
               }
             }
-          }
+          }  
+          choicelist[choice].isPlaced=true;
+          cash-=choicelist[choice].cost;
         }
         else if(clickGrid[clickX][clickY]==1002)
         {
@@ -208,48 +207,8 @@ public class MallKing extends JPanel
         }
       }       
     }); 
-  }
-  public void choices(int position)
-  {
-    choiceCounter=position;
-    if (choiceCounter<0)
-      choiceCounter=0;
-    int counter = 0;
-    int c=0;
-    for(int i=choiceCounter;i<48; i++)
-    {
-      if(store[i].isPlaced==false&&counter<9)
-      {
-        choicelist[counter]=store[i];
-        counter++;
-        choiceCounter=i-8;
-      }
-      if(i==47&&counter<9)
-      {
-        for (int b=counter;b<9;b++)
-        {
-          choicelist[b]=null;
-        }
-      }
-    }
-  }      
-  
-  public void loading(String file, String stores, String grid)
-  {
     try { 
-      FileReader fr = new FileReader(file); 
-      BufferedReader br = new BufferedReader(fr); 
-      cash = Integer.parseInt(br.readLine());
-      year = Integer.parseInt(br.readLine());
-      month = Integer.parseInt(br.readLine());
-      day  = Integer.parseInt(br.readLine());
-      daymod = Integer.parseInt(br.readLine());
-      daylength  = Integer.parseInt(br.readLine());
-      br.close(); 
-    } catch(IOException e){}
-    
-    try { 
-      FileReader fr = new FileReader(stores); 
+      FileReader fr = new FileReader("StoreList.txt"); 
       BufferedReader br = new BufferedReader(fr); 
       for(int i=0;i<48; i++)
       {
@@ -258,19 +217,11 @@ public class MallKing extends JPanel
         int stars = Integer.parseInt(br.readLine());
         int profitability = Integer.parseInt(br.readLine());
         int cost = Integer.parseInt(br.readLine());
-        String placed=br.readLine();
-        String str="true";
-        boolean isPlaced = (str.compareTo(placed)==0);
-        int x = Integer.parseInt(br.readLine());
-        int y = Integer.parseInt(br.readLine());
-        int locsize = Integer.parseInt(br.readLine());
-        int location = Integer.parseInt(br.readLine());
-        store[i]=(new Store(name, size, stars, profitability, cost, i, isPlaced, x, y, locsize, location));
+        store[i]=(new Store(name, size, stars, profitability, cost,i,false));
       }
       br.close(); 
     }
     catch(IOException e){}
-    
     try { 
       FileReader fr = new FileReader("Picture.txt"); 
       BufferedReader br = new BufferedReader(fr);
@@ -282,15 +233,63 @@ public class MallKing extends JPanel
       }
       br.close(); 
     }
-    catch(IOException e){}   
-    loadgrid(grid);
+    catch(IOException e){}
+  }
+  
+  public void loadNew()
+  {
+    cash = 500000;
+    year = 1;
+    month = 1;
+    day  = 120;
+    daymod=120;
+    daylength=3600;
     loadGame=false;
     playGame=true;  
     newGame=false;   
     storeMenu=false;
     paused=true;
-    changeStore=false;   
-  } 
+    changeStore=false;
+  }
+  
+  public void choices()
+  {
+    //store[9].placed=true;
+    int counter=0;
+    for(int i=0;i<48; i++)
+    {
+      if(store[i].isPlaced==false&&counter<9)
+      {
+        choicelist[counter]=store[i];
+        counter++;
+      }
+    }      
+  }
+  
+  public void loading()
+  {
+    try { 
+      FileReader fr = new FileReader("save.txt"); 
+      BufferedReader br = new BufferedReader(fr); 
+      cash = Integer.parseInt(br.readLine());
+      year = Integer.parseInt(br.readLine());
+      month = Integer.parseInt(br.readLine());
+      day  = Integer.parseInt(br.readLine());
+      profit = Double.parseDouble((br.readLine()));
+      balance = Double.parseDouble(br.readLine());
+      expenses = Double.parseDouble(br.readLine());
+      daymod = Integer.parseInt(br.readLine());
+      daylength  = Integer.parseInt(br.readLine());
+      storeMenu=false;
+      changeStore=false;
+      paused=true;
+      br.close(); 
+    } catch(IOException e){}
+    loadgrid("gridSave.txt");
+    loadGame=false;
+    playGame=true;    
+  }
+  
   public void save()
   {
     try { 
@@ -300,31 +299,27 @@ public class MallKing extends JPanel
       pw.println(year);
       pw.println(month);
       pw.println(day);
+      pw.println(profit);
+      pw.println(balance);
+      pw.println(expenses);
       pw.println(daymod);
       pw.println(daylength);
       pw.close(); 
     } catch(IOException e){}
     try { 
-      FileWriter fw = new FileWriter("saveStores.txt"); 
+      FileWriter fw = new FileWriter("gridSave.txt"); 
       PrintWriter pw = new PrintWriter(fw);
-      for(int i=0;i<48; i++)
+      for (int a=1;a<23;a++)
       {
-        pw.println(store[i].name);
-        pw.println(store[i].size);
-        pw.println(store[i].stars);
-        pw.println(store[i].profitability);
-        pw.println(store[i].cost);
-        pw.println(store[i].isPlaced);
-        pw.println(store[i].x);
-        pw.println(store[i].y);
-        pw.println(store[i].locsize);
-        pw.println(store[i].location);
-      }
+        for (int b=1;b<13;b++)
+        {
+          pw.println(clickGrid[a][b]);
+        }
+      }      
       pw.close(); 
     } catch(IOException e){}
-    saveGrid("gridSave.txt");
-    
   }
+  
   public void loadgrid(String file)
   {
     try { 
@@ -340,10 +335,11 @@ public class MallKing extends JPanel
       br.close(); 
     } catch(IOException e){}
   }
-  public void saveGrid(String file)
+  
+  public void savetemp()
   {
     try { 
-      FileWriter fw = new FileWriter(file); 
+      FileWriter fw = new FileWriter("gridTemp.txt"); 
       PrintWriter pw = new PrintWriter(fw);
       for (int a=1;a<23;a++)
       {
@@ -355,10 +351,12 @@ public class MallKing extends JPanel
       pw.close(); 
     } catch(IOException e){}
   }
-  public void newGame(int cash, int day, int month, int year)
+  
+  public void newGame(int cash, int day, int month, int year, double profit, double balance, double expenses)
   {
     calendar(year, month, day);
-  } 
+  }
+  
   public void calendar(int year, int month, int day)
   {
     if(!paused)
@@ -370,12 +368,48 @@ public class MallKing extends JPanel
           store[i].calculateExpenses();
         }
       }
-      if(day>=daylength)
+      if(day>=daylength)//HERE
       {
         this.month++;
+        int r= (int)(Math.random()*0);
+        if(r==0)
+        {
+          r=(int)(Math.random()*20);//160
+        //  System.out.println(r);
+          if(r<80)
+          {
+            r=(int)(Math.random()*8);
+            System.out.println(r);
+            if(r%2==0)
+            {
+              r--;
+            }
+            try {
+              FileReader fr = new FileReader("Celebrities.txt"); 
+              BufferedReader br = new BufferedReader(fr); 
+              for(int i=0;i<r;i++)
+              {
+                who=br.readLine();
+                multiplier = Double.parseDouble(br.readLine())/100;//divide by 100
+              }
+              System.out.println(who+multiplier);
+              br.close(); 
+            }
+            catch(IOException e){}
+          }
+          else if(r>79&&r<120)
+          {
+            r=(int)(Math.random()*6);
+          }
+          else if(r>119&&r<140)
+          {
+          }
+          else
+          {
+          }
+        }
         for(int i=0;i<48; i++)
         {
-          //store[i].calculateRevenue();
           if(store[i].getIsPlaced())
           {
             cash+=store[i].calculateRevenue();
@@ -386,7 +420,6 @@ public class MallKing extends JPanel
       }
       if(month>12)
       {
-        
         this.year++;
         this.month=1;
       }
@@ -396,6 +429,7 @@ public class MallKing extends JPanel
       }
     }
   }
+  
   @Override public void paint(Graphics g) 
   {
     super.paint(g);
@@ -432,24 +466,24 @@ public class MallKing extends JPanel
       } 
       catch (IOException e){} catch (FontFormatException e){}
       
-      for (int a=0;a<48;a++)
+      for (int a=0;a<34;a++)
       {
         if (store[a].isPlaced==true)
         {
           String location="";
-          if (locsize[store[a].location]==1)
+          if (locsize[store[a].location-101]==1)
           {
             location=(store[a].counter+1)+"s.png";
           }
           else
           {
-            location=(store[a].counter+1)+".png";
+            location+=(store[a].counter+1)+".png";
           }
           try
           {
             img = ImageIO.read(new File(location));
           } catch (IOException e){}
-          g.drawImage(img, store[a].x, store[a].y, null);
+          g.drawImage(img, locX[store[a].location-101], locY[store[a].location-101], null);
         }
       }
       
@@ -508,22 +542,9 @@ public class MallKing extends JPanel
           g.drawImage(img, 0, 0, null);
           for(int i=0;i<9; i++)
           {
-            if(choicelist[i]!=null)
-            {
-              g.drawString(choicelist[i].name,128, i*60+166);
-              g.drawString(String.valueOf(choicelist[i].cost),400, i*60+166);
-            }
+            g.drawString(choicelist[i].name,128, i*60+166);
+            g.drawString(String.valueOf(choicelist[i].cost),400, i*60+166);
           }
-          if(choiceCounter>0)
-          {
-            img = ImageIO.read(new File("cUp.png"));
-            g.drawImage(img, 0, 0, null);
-          }
-          if(choiceCounter<=38)
-          {
-            img = ImageIO.read(new File("cDown.png"));
-            g.drawImage(img, 0, 0, null);
-          } 
         }      
         catch (IOException e){}
       }  
@@ -597,19 +618,22 @@ public class MallKing extends JPanel
       }
     }
   }
+  
   public void reset()
   {
     changeStore=false;
     settings=false;
     storeMenu=false;
+    pickStore=false;
     confirm=false;
     isMuted=false;
   }
-  public void cheats()
+  public void options()
   {
     JFrame frame = new JFrame("Cheat Code");
     String code = JOptionPane.showInputDialog(frame, "Please Enter the Cheat Code");
   }
+  
   public static void main(String[]args) throws InterruptedException
   { 
     JFrame frame = new JFrame("Mall King");   
@@ -622,15 +646,21 @@ public class MallKing extends JPanel
       {
         if(newGame)
         {
-          m.loading("New.txt", "storeList.txt", "gridLoad.txt");
+          m.loadNew();
+          m.loadgrid("gridLoad.txt");
+          loadGame=false;
+          playGame=true;   
+          newGame=false;
+          m.reset();
         }
         else if(playGame)
         {
-          m.newGame(cash,day,month,year);
+          m.newGame(cash,day,month,year,profit,balance,expenses);
         }
         else if(loadGame)
         {
-          m.loading("save.txt", "saveStores.txt", "gridSave.txt");
+          m.loading(); 
+          m.reset();
         }
         m.repaint(); 
         Thread.sleep(10); 
