@@ -1,30 +1,11 @@
-import javax.swing.*; 
-import java.awt.*;
-import java.io.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Font;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import java.lang.Object;
-import java.awt.Component;
-import java.awt.Container;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-
-
-//encrypt cheat code 
-//make user get less money when store is placed early
 
 public class Store
 {
-  private int size;
-  private int stars;
-  private int profitability;
+  public int size;
+  public int stars;
+  public int profitability;
   public int cost;
   public String name;
   public boolean isPlaced;
@@ -36,30 +17,38 @@ public class Store
   public boolean isBurned;
   public int timeRun;
   public int m=1;//used for doubling profitability
-  public int dayPlaced;
   public Store()
   {
   }
-  public Store(String Name, int size, int stars, int profitability, int cost,int counter, boolean isPlaced)
+  public Store(String name, int size, int stars, int profitability, int cost, int counter, boolean isPlaced, int x, int y, int locsize, int location, boolean isBurned)
   {
     this.size=size;
     this.stars=stars;
     this.profitability=profitability;
     this.cost=cost;
-    this.name=Name;
-    this.isPlaced=false;
+    this.name=name;
+    this.isPlaced=isPlaced;
     this.counter=counter;
+    this.x=x;
+    this.y=y;
+    this.location=location;
+    this.locsize=locsize;
+    this.isBurned=isBurned;
   }
   public boolean getIsPlaced()
   {
     return isPlaced;
+  }
+    public boolean getIsBurned()
+  {
+    return isBurned;
   }
   public double calculateRevenue()// Add special money making events (read from list, person visited mall boosted proft)santa always on 24th example
   {
     timeRun--;
     if(timeRun>0)
     {
-      m=2;
+      m=3;
     }
     else
     {
@@ -102,7 +91,7 @@ public class Store
       {
         String runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
         System.out.println(runTime);
-        if(runTime!=null)
+        if(!runTime.equals(null))
         {
           timeRun=Integer.parseInt(runTime);
           while(!isInteger(runTime))
@@ -126,7 +115,7 @@ public class Store
       if(n==0)
       {
         timeRun++;
-        m=2;
+        m=3;
         return promotionCost;
       }
       return 0;
@@ -145,11 +134,11 @@ public class Store
   public double calculateExpenses()
   {
     JFrame frame = new JFrame("Mall");
-    int a = (int)(Math.random()*1000000);
-    if(a==1)
+//int a = (int)(Math.random()*1000000);
+    int a = (int)(Math.random()*100);
+        if(a==1&&isBurned==false)
     {
-      JOptionPane.showMessageDialog(frame,name+" Has burned down!!!!\n     Store has been removed","OH NOSE",JOptionPane.WARNING_MESSAGE);
-      isPlaced=false;
+      JOptionPane.showMessageDialog(frame,name+" Has burned down!!!!\n     No revenue will be made","OH NOSE",JOptionPane.WARNING_MESSAGE);
       isBurned=true;
     }
     
