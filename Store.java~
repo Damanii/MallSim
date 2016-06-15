@@ -17,7 +17,6 @@ public class Store
   public boolean isBurned;
   public int timeRun;
   public int m=1;//used for doubling profitability
-  public int dayPlaced;
   public Store()
   {
   }
@@ -49,7 +48,7 @@ public class Store
     timeRun--;
     if(timeRun>0)
     {
-      m=2;
+      m=3;
     }
     else
     {
@@ -92,7 +91,7 @@ public class Store
       {
         String runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
         System.out.println(runTime);
-        if(runTime!=null)
+        if(!runTime.equals(null))
         {
           timeRun=Integer.parseInt(runTime);
           while(!isInteger(runTime))
@@ -116,7 +115,7 @@ public class Store
       if(n==0)
       {
         timeRun++;
-        m=2;
+        m=3;
         return promotionCost;
       }
       return 0;

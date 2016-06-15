@@ -7,6 +7,12 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
+//music
+import sun.audio.AudioData;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+import sun.audio.ContinuousAudioDataStream;
+//music
 
 public class MallKing extends JPanel
 {
@@ -155,6 +161,7 @@ public class MallKing extends JPanel
           }
           else
           {
+            repair=true;
             saveGrid("gridTemp.txt");
             loadgrid("gridConfirm.txt");
           }
@@ -232,6 +239,13 @@ public class MallKing extends JPanel
           newGame=false;
           exit=false;
         }
+        else if(clickGrid[clickX][clickY]==1001&&repair==true)
+        {
+          loadgrid("gridTemp.txt");
+          cash-=store[menu].cost*.1;
+          store[menu].isBurned=false;
+          repair=false;
+        }
         else if(clickGrid[clickX][clickY]==1002&&confirm==true)
         {
           loadgrid("gridPicker.txt");
@@ -246,6 +260,11 @@ public class MallKing extends JPanel
         {
           loadgrid("gridTemp.txt");
           exit=false;
+        }
+        else if(clickGrid[clickX][clickY]==1002&&repair==true)
+        {
+          loadgrid("gridTemp.txt");
+          repair=false;
         }
         else if(clickGrid[clickX][clickY]==1100&&changeStore==true)
         {
@@ -304,7 +323,9 @@ public class MallKing extends JPanel
     menu=store[menu].location+101;
     store[menu].location=0;
     store[menu].locsize=0;
+    store[menu].timeRun=0;
     choicelist[choice].x=0;
+    choicelist[choice].y=0;
     choicelist[choice].y=0;
   }
   public void loading(String file, String stores, String grid)
@@ -530,8 +551,8 @@ public class MallKing extends JPanel
           }
           else
           {
-          JFrame frame = new JFrame("Visitor");
-          JOptionPane.showMessageDialog(frame,who+" has visited your mall, giving every store a multiplier of "+multiplier+" for this month");
+            JFrame frame = new JFrame("Visitor");
+            JOptionPane.showMessageDialog(frame,who+" has visited your mall, giving every store a multiplier of "+multiplier+" for this month");
           }
         }
         for(int i=0;i<48; i++)
@@ -823,7 +844,7 @@ public class MallKing extends JPanel
         g.setColor (fontcolor);
         g.drawString(String.valueOf(choicelist[choice].name),480,400);
       }
-            if (repair==true)
+      if (repair==true)
       { 
         try
         {
@@ -882,6 +903,25 @@ public class MallKing extends JPanel
     JFrame frame = new JFrame("Cheat Code");
     String code = JOptionPane.showInputDialog(frame, "Please Enter the Cheat Code");
   }
+  //music
+  //http://alvinalexander.com/java/java-audio-example-java-au-play-sound
+  public static void startBGMusic()
+  {
+    AudioPlayer myBackgroundPlayer = AudioPlayer.player;
+    ContinuousAudioDataStream myLoop = null;
+    try
+    {
+      AudioStream myBackgroundMusic = new AudioStream(new FileInputStream("bgmusic.wav"));
+      AudioData myData = myBackgroundMusic.getData();
+      myLoop = new ContinuousAudioDataStream(myData);
+    }
+    catch(Exception error)
+    {
+      JOptionPane.showMessageDialog(null, "Invalid file!");
+    }
+    myBackgroundPlayer.start(myLoop);
+  }
+  //music
   public static void main(String[]args) throws InterruptedException
   { 
     JFrame frame = new JFrame("Mall King");   
@@ -890,6 +930,9 @@ public class MallKing extends JPanel
     frame.setSize(1280, 760);
     frame.setVisible(true); 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //music 
+    startBGMusic();
+    //music
     while (true) {
       {
         if(newGame)

@@ -7,12 +7,10 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
-//music
 import sun.audio.AudioData;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import sun.audio.ContinuousAudioDataStream;
-//music
 
 public class MallKing extends JPanel
 {
@@ -36,7 +34,7 @@ public class MallKing extends JPanel
   private static int year;
   private static int month;
   private static int day;
-  private static int intro=59;
+  private static int intro=60;
   private static int menu=0;
   private static int choice=0;
   private Boolean paused=true;
@@ -473,7 +471,7 @@ public class MallKing extends JPanel
       if(day>=daylength)
       {
         this.month++;
-        int r= (int)(Math.random()*0);
+        int r=(int)(Math.random()*0);
         if(r==0)
         {
           visitor=true;
@@ -504,8 +502,7 @@ public class MallKing extends JPanel
             if(r%2!=0)
             {
               r--;
-            }
-            
+            }            
             try {
               FileReader fr = new FileReader("Celebrities2.txt"); 
               BufferedReader br = new BufferedReader(fr); 
@@ -551,8 +548,8 @@ public class MallKing extends JPanel
           }
           else
           {
-            JFrame frame = new JFrame("Visitor");
-            JOptionPane.showMessageDialog(frame,who+" has visited your mall, giving every store a multiplier of "+multiplier+" for this month");
+            JFrame frame = new JFrame("Celebrity Visitor!");
+            JOptionPane.showMessageDialog(frame,who+" has visited your mall, and shopping has been boosted "+multiplier+" times this month!");
           }
         }
         for(int i=0;i<48; i++)
@@ -561,12 +558,16 @@ public class MallKing extends JPanel
           {
             if(visitor==true)
             {
-              cash+=store[i].calculateRevenue()*multiplier;
+              double income=store[i].calculateRevenue()*multiplier+store[i].calculateExpenses();
+                cash+=income;
+              store[i].money=income;
               visitor=false;
             }
             else
             {
-              cash+=store[i].calculateRevenue();
+              double income=store[i].calculateRevenue()+store[i].calculateExpenses();
+              cash+=income;
+              store[i].money=income;
             }
           }
         }
@@ -690,6 +691,7 @@ public class MallKing extends JPanel
         if (menu<100)
         {
           g.drawString(store[menu].name,5,160);
+          g.drawString(String.valueOf(store[menu].money),65,220);
           g.drawString("Replace Store",64,285);
           try
           {
@@ -905,22 +907,21 @@ public class MallKing extends JPanel
   }
   //music
   //http://alvinalexander.com/java/java-audio-example-java-au-play-sound
-  public static void startBGMusic()
-  {
-    AudioPlayer myBackgroundPlayer = AudioPlayer.player;
-    ContinuousAudioDataStream myLoop = null;
-    try
-    {
-      AudioStream myBackgroundMusic = new AudioStream(new FileInputStream("bgmusic.wav"));
-      AudioData myData = myBackgroundMusic.getData();
-      myLoop = new ContinuousAudioDataStream(myData);
-    }
-    catch(Exception error)
-    {
-      JOptionPane.showMessageDialog(null, "Invalid file!");
-    }
-    myBackgroundPlayer.start(myLoop);
-  }
+//  public static void startBGMusic()
+//  {
+//    AudioPlayer myBackgroundPlayer = AudioPlayer.player;
+//    ContinuousAudioDataStream myLoop = null;
+//    try
+//    {
+//      String song="bgmusic.wav";
+//      AudioStream myBackgroundMusic = new AudioStream(new FileInputStream(song));
+//      AudioData myData = myBackgroundMusic.getData();
+//      myLoop = new ContinuousAudioDataStream(myData);
+//    }
+//    catch(Exception error)
+//    {}
+//    myBackgroundPlayer.start(myLoop);
+//  }
   //music
   public static void main(String[]args) throws InterruptedException
   { 
@@ -931,7 +932,7 @@ public class MallKing extends JPanel
     frame.setVisible(true); 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     //music 
-    startBGMusic();
+//    startBGMusic();
     //music
     while (true) {
       {
