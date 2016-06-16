@@ -16,11 +16,12 @@ public class Store
   public int location;
   public boolean isBurned;
   public int timeRun;
-  public int m=1;//used for doubling profitability
+  public int m=1;
+  public double money;
   public Store()
   {
   }
-  public Store(String name, int size, int stars, int profitability, int cost, int counter, boolean isPlaced, int x, int y, int locsize, int location, boolean isBurned)
+  public Store(String name, int stars, int profitability, int cost, int counter, boolean isPlaced, int x, int y, int location, boolean isBurned)
   {
     this.size=size;
     this.stars=stars;
@@ -39,11 +40,11 @@ public class Store
   {
     return isPlaced;
   }
-    public boolean getIsBurned()
+  public boolean getIsBurned()
   {
     return isBurned;
   }
-  public double calculateRevenue()// Add special money making events (read from list, person visited mall boosted proft)santa always on 24th example
+  public double calculateRevenue()
   {
     timeRun--;
     if(timeRun>0)
@@ -87,38 +88,38 @@ public class Store
       return 0; 
     }
     double promotionCost=0;
-      do
+    do
+    {
+      String runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
+      System.out.println(runTime);
+      if(!runTime.equals(null))
       {
-        String runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
-        System.out.println(runTime);
-        if(!runTime.equals(null))
+        timeRun=Integer.parseInt(runTime);
+        while(!isInteger(runTime))
         {
-          timeRun=Integer.parseInt(runTime);
-          while(!isInteger(runTime))
+          if(isInteger(runTime))
           {
-            if(isInteger(runTime))
-            {
-              timeRun=Integer.parseInt(runTime);
-            }
-            else
-            {
-              runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
-            }
+            timeRun=Integer.parseInt(runTime);
           }
-          promotionCost=(((cost*0.05*(timeRun*30))/5.0));
+          else
+          {
+            runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
+          }
         }
-      }while(promotionCost>cash);
-      
-      String promo=String.valueOf(promotionCost);
-      Object[] options = {"Run Promo","Cancel"};
-      int n = JOptionPane.showOptionDialog(frame,"This promotion will cost $"+ promo,"Promotion",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
-      if(n==0)
-      {
-        timeRun++;
-        m=3;
-        return promotionCost;
+        promotionCost=(((cost*0.05*(timeRun*30))/5.0));
       }
-      return 0;
+    }while(promotionCost>cash);
+    
+    String promo=String.valueOf(promotionCost);
+    Object[] options = {"Run Promo","Cancel"};
+    int n = JOptionPane.showOptionDialog(frame,"This promotion will cost $"+ promo,"Promotion",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+    if(n==0)
+    {
+      timeRun++;
+      m=3;
+      return promotionCost;
+    }
+    return 0;
   }
   
   public boolean isInteger( String input ) {
@@ -134,46 +135,19 @@ public class Store
   public double calculateExpenses()
   {
     JFrame frame = new JFrame("Mall");
-//int a = (int)(Math.random()*1000000);
-    int a = (int)(Math.random()*100);
-        if(a==1&&isBurned==false)
+    int a = (int)(Math.random()*1000000);
+    if(a==1&&isBurned==false)
     {
-      JOptionPane.showMessageDialog(frame,name+" Has burned down!!!!\n     No revenue will be made","OH NOSE",JOptionPane.WARNING_MESSAGE);
+      JOptionPane.showMessageDialog(frame,name+" Has burned down!!\n     No revenue will be made.","OH NOSE",JOptionPane.WARNING_MESSAGE);
       isBurned=true;
     }
     
     int rand = (int)(Math.random()*100000);
-    if(size==1)
+    if (rand==1)
     {
-      if(rand==1)
-      {
-        JOptionPane.showMessageDialog(frame,"There has been a robbery  in "+name+"!!!!\n-$20000","OH NOSE",JOptionPane.WARNING_MESSAGE);
-        return -20000;
-      }
-    }
-    else if(size==2)
-    {
-      if(rand==1)
-      {
-        JOptionPane.showMessageDialog(frame,"There has been a robbery  in "+name+"!!!!\n-$40000","OH NOSE",JOptionPane.WARNING_MESSAGE);
-        return -40000;
-      }
-    }
-    else if(size==3)
-    {
-      if(rand==1)
-      {
-        JOptionPane.showMessageDialog(frame,"There has been a robbery  in "+name+"!!!!\n-$60000","OH NOSE",JOptionPane.WARNING_MESSAGE);
-        return -60000;
-      }
-    }
-    else if(size==4)
-    {
-      if(rand==1)
-      {
-        JOptionPane.showMessageDialog(frame,"There has been a robbery  in "+name+"!!!!\n-$80000","OH NOSE",JOptionPane.WARNING_MESSAGE);
-        return -80000;
-      }
+      int loss = (int)(Math.random()*40) * cost;
+      JOptionPane.showMessageDialog(frame,"There has been a robbery  in "+name+"!!\n"+loss+" was stolen.","OH NOSE",JOptionPane.WARNING_MESSAGE);
+      return loss;
     }
     return 0;
   }

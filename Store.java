@@ -21,7 +21,7 @@ public class Store
   public Store()
   {
   }
-  public Store(String name, int size, int stars, int profitability, int cost, int counter, boolean isPlaced, int x, int y, int locsize, int location, boolean isBurned)
+  public Store(String name, int stars, int profitability, int cost, int counter, boolean isPlaced, int x, int y, int location, int locsize, boolean isBurned)
   {
     this.size=size;
     this.stars=stars;
@@ -56,7 +56,7 @@ public class Store
       m=1;
     }
     System.out.println(m);
-    int random = (int)(Math.random()*40);
+    int random = (int)(Math.random()*45);
     if(stars==1)
     {
       return (profitability*stars*40*random-500)*m;
@@ -106,7 +106,7 @@ public class Store
             runTime = JOptionPane.showInputDialog(frame, "How long would you like to run the promotion for (in Months)?");
           }
         }
-        promotionCost=(((cost*0.05*(timeRun*30))/5.0));
+        promotionCost=(cost*0.05*(timeRun));
       }
     }while(promotionCost>cash);
     
@@ -131,21 +131,24 @@ public class Store
       return false;
     }
   }
+  public void increaseProfitability()
+  {
+  }
   
   public double calculateExpenses()
   {
     JFrame frame = new JFrame("Mall");
     int a = (int)(Math.random()*1000000);
-    if(a==1&&isBurned==false)
+    if(a==0&&isBurned==false)
     {
       JOptionPane.showMessageDialog(frame,name+" Has burned down!!\n     No revenue will be made.","OH NOSE",JOptionPane.WARNING_MESSAGE);
       isBurned=true;
     }
     
     int rand = (int)(Math.random()*100000);
-    if (rand==1)
+    if (rand==0)
     {
-      int loss = (int)(Math.random()*40) * cost;
+      double loss = 0.05*cost;
       JOptionPane.showMessageDialog(frame,"There has been a robbery  in "+name+"!!\n"+loss+" was stolen.","OH NOSE",JOptionPane.WARNING_MESSAGE);
       return loss;
     }

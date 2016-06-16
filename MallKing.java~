@@ -7,12 +7,10 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
-//music
 import sun.audio.AudioData;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import sun.audio.ContinuousAudioDataStream;
-//music
 
 public class MallKing extends JPanel
 {
@@ -23,6 +21,7 @@ public class MallKing extends JPanel
   private static boolean loadGame;
   private static boolean newGame;
   private static boolean repair=false;
+  private static boolean bankrupt=false;
   private static boolean remove=false;
   private static boolean exit=false;
   private static boolean settings=false;
@@ -36,11 +35,11 @@ public class MallKing extends JPanel
   private static int year;
   private static int month;
   private static int day;
-  private static int intro=59;
+  private static int intro=60;
   private static int menu=0;
   private static int choice=0;
   private Boolean paused=true;
-  Store[] store = new Store[48];
+  Store[] store = new Store[63];
   public static int clickX;
   public static int clickY;
   public static int choiceCounter;
@@ -118,7 +117,7 @@ public class MallKing extends JPanel
         {
           settings=!settings;
         }
-        else if(clickGrid[clickX][clickY]<=133&&changeStore==false)
+        else if(clickGrid[clickX][clickY]<=133&&changeStore==false&&bankrupt==false)
         {
           if (storeMenu==true&&menu==clickGrid[clickX][clickY])
           {
@@ -171,7 +170,11 @@ public class MallKing extends JPanel
           remove=true;
           saveGrid("gridTemp.txt");
           loadgrid("gridConfirm.txt");
-        }        
+        }   
+        else if(clickGrid[clickX][clickY]==819&&settings==true)
+        {
+          cheats();
+        }  
         else if(changeStore==true&&clickGrid[clickX][clickY]==817)
         {
           loadgrid("gridTemp.txt");
@@ -195,7 +198,7 @@ public class MallKing extends JPanel
         {
           choices(choiceCounter-9);
         }
-        else if(clickGrid[clickX][clickY]==911&&choiceCounter<=48)
+        else if(clickGrid[clickX][clickY]==911&&choiceCounter<=63)
         {
           choices(choiceCounter+9);
         }
@@ -276,6 +279,14 @@ public class MallKing extends JPanel
           loadgrid("gridTemp.txt");
           overpricedrep=false;
         }
+        else if(clickGrid[clickX][clickY]==0&&bankrupt==true)
+        {
+          loadgrid("gridClear.txt");
+          playGame=false;
+          loadGame=false;
+          newGame=false;
+          exit=false;
+        }
       }       
     }); 
   }
@@ -287,14 +298,13 @@ public class MallKing extends JPanel
       choiceCounter=0;
     }
     int counter = 0;
-    for(int i=choiceCounter;i<48; i++)
+    for(int i=choiceCounter;i<63; i++)
     {
       if(store[i].isPlaced==false&&counter<9)
       {
         choicelist[counter]=store[i];
         counter++;
         choiceCounter=i-8;
-        System.out.println(choiceCounter);
       }
       if(i==47&&counter<9)
       {
@@ -345,10 +355,9 @@ public class MallKing extends JPanel
     try { 
       FileReader fr = new FileReader(stores); 
       BufferedReader br = new BufferedReader(fr); 
-      for(int i=0;i<48; i++)
+      for(int i=0;i<63; i++)
       {
         String name=br.readLine();
-        int size = Integer.parseInt(br.readLine());
         int stars = Integer.parseInt(br.readLine());
         int profitability = Integer.parseInt(br.readLine());
         int cost = Integer.parseInt(br.readLine());
@@ -357,14 +366,24 @@ public class MallKing extends JPanel
         boolean isPlaced = (str.compareTo(placed)==0);
         int x = Integer.parseInt(br.readLine());
         int y = Integer.parseInt(br.readLine());
-        int locsize = Integer.parseInt(br.readLine());
         int location = Integer.parseInt(br.readLine());
         String burned=br.readLine();
         str="true";
         boolean isBurned = (str.compareTo(burned)==0);
-        store[i]=(new Store(name, size, stars, profitability, cost, i, isPlaced, x, y, locsize, location, isBurned));
+        store[i]=(new Store(name, stars, profitability, cost, i, isPlaced, x, y, location, isBurned));
       }
-      br.close(); 
+      br.close();
+      repair=false;
+      bankrupt=false;
+      remove=false;
+      exit=false;
+      settings=false;
+      isMuted=false;
+      changeStore=false;
+      storeMenu=false;
+      confirm=false;
+      overpriced=false;
+      overpricedrep=false;
     }
     catch(IOException e){}
     
@@ -373,7 +392,6 @@ public class MallKing extends JPanel
       BufferedReader br = new BufferedReader(fr);
       for(int i=0;i<33; i++)
       {
-        locsize[i]=Integer.parseInt(br.readLine());
         locX[i]=Integer.parseInt(br.readLine());
         locY[i]=Integer.parseInt(br.readLine());
       }
@@ -405,17 +423,15 @@ public class MallKing extends JPanel
     try { 
       FileWriter fw = new FileWriter("saveStores.txt"); 
       PrintWriter pw = new PrintWriter(fw);
-      for(int i=0;i<48; i++)
+      for(int i=0;i<63; i++)
       {
         pw.println(store[i].name);
-        pw.println(store[i].size);
         pw.println(store[i].stars);
         pw.println(store[i].profitability);
         pw.println(store[i].cost);
         pw.println(store[i].isPlaced);
         pw.println(store[i].x);
         pw.println(store[i].y);
-        pw.println(store[i].locsize);
         pw.println(store[i].location);
         pw.println(store[i].isBurned);
       }
@@ -463,7 +479,7 @@ public class MallKing extends JPanel
   {
     if(!paused)
     {
-      for(int i=0;i<48; i++)
+      for(int i=0;i<63; i++)
       {
         if(store[i].getIsPlaced())
         {
@@ -473,7 +489,7 @@ public class MallKing extends JPanel
       if(day>=daylength)
       {
         this.month++;
-        int r= (int)(Math.random()*0);
+        int r=(int)(Math.random()*0);
         if(r==0)
         {
           visitor=true;
@@ -493,7 +509,7 @@ public class MallKing extends JPanel
                 who=br.readLine();
                 multiplier = Double.parseDouble(br.readLine())/100;//divide by 100
               }
-              System.out.println(who+multiplier);
+              //System.out.println(who+multiplier);
               br.close(); 
             }
             catch(IOException e){}
@@ -504,8 +520,7 @@ public class MallKing extends JPanel
             if(r%2!=0)
             {
               r--;
-            }
-            
+            }            
             try {
               FileReader fr = new FileReader("Celebrities2.txt"); 
               BufferedReader br = new BufferedReader(fr); 
@@ -514,7 +529,7 @@ public class MallKing extends JPanel
                 who=br.readLine();
                 multiplier = Double.parseDouble(br.readLine())/100;//divide by 100
               }
-              System.out.println(who+multiplier);
+              //System.out.println(who+multiplier);
               br.close(); 
             }
             catch(IOException e){}
@@ -526,7 +541,7 @@ public class MallKing extends JPanel
               BufferedReader br = new BufferedReader(fr); 
               who=br.readLine();
               multiplier = Double.parseDouble(br.readLine())/100;//divide by 100
-              System.out.println(who+multiplier);
+              //System.out.println(who+multiplier);
               br.close(); 
             }
             catch(IOException e){}
@@ -538,7 +553,7 @@ public class MallKing extends JPanel
               BufferedReader br = new BufferedReader(fr); 
               who=br.readLine();
               multiplier = Double.parseDouble(br.readLine())/100;//divide by 100
-              System.out.println(who+multiplier);
+              //System.out.println(who+multiplier);
               br.close(); 
             }
             catch(IOException e){}
@@ -551,22 +566,26 @@ public class MallKing extends JPanel
           }
           else
           {
-            JFrame frame = new JFrame("Visitor");
-            JOptionPane.showMessageDialog(frame,who+" has visited your mall, giving every store a multiplier of "+multiplier+" for this month");
+            JFrame frame = new JFrame("Celebrity Visitor!");
+            JOptionPane.showMessageDialog(frame,who+" has visited your mall, and shopping has been boosted "+multiplier+" times this month!");
           }
         }
-        for(int i=0;i<48; i++)
+        for(int i=0;i<63; i++)
         {
           if(store[i].getIsPlaced())
           {
             if(visitor==true)
             {
-              cash+=store[i].calculateRevenue()*multiplier;
+              double income=store[i].calculateRevenue()*multiplier+store[i].calculateExpenses();
+              cash+=income;
+              store[i].money=income;
               visitor=false;
             }
             else
             {
-              cash+=store[i].calculateRevenue();
+              double income=store[i].calculateRevenue()+store[i].calculateExpenses();
+              cash+=income;
+              store[i].money=income;
             }
           }
         }
@@ -620,7 +639,7 @@ public class MallKing extends JPanel
       } 
       catch (IOException e){} catch (FontFormatException e){}
       
-      for (int a=0;a<48;a++)
+      for (int a=0;a<63;a++)
       {
         if (store[a].isPlaced==true)
         {
@@ -690,6 +709,7 @@ public class MallKing extends JPanel
         if (menu<100)
         {
           g.drawString(store[menu].name,5,160);
+          g.drawString(String.valueOf(store[menu].money),65,220);
           g.drawString("Replace Store",64,285);
           try
           {
@@ -888,6 +908,15 @@ public class MallKing extends JPanel
         } catch (IOException e){}
         g.drawImage(img, 0, 0, null);
       }
+      if (bankrupt==true)
+      { 
+        try
+        {
+          img = ImageIO.read(new File("Bankrupt.png"));
+        } catch (IOException e){}
+        g.drawImage(img, 0, 0, null);
+        loadgrid("gridClear.txt");
+      }
     }
   }
   public void reset()
@@ -905,22 +934,21 @@ public class MallKing extends JPanel
   }
   //music
   //http://alvinalexander.com/java/java-audio-example-java-au-play-sound
-  public static void startBGMusic()
-  {
-    AudioPlayer myBackgroundPlayer = AudioPlayer.player;
-    ContinuousAudioDataStream myLoop = null;
-    try
-    {
-      AudioStream myBackgroundMusic = new AudioStream(new FileInputStream("bgmusic.wav"));
-      AudioData myData = myBackgroundMusic.getData();
-      myLoop = new ContinuousAudioDataStream(myData);
-    }
-    catch(Exception error)
-    {
-      JOptionPane.showMessageDialog(null, "Invalid file!");
-    }
-    myBackgroundPlayer.start(myLoop);
-  }
+//  public static void startBGMusic()
+//  {
+//    AudioPlayer myBackgroundPlayer = AudioPlayer.player;
+//    ContinuousAudioDataStream myLoop = null;
+//    try
+//    {
+//      String song="bgmusic.wav";
+//      AudioStream myBackgroundMusic = new AudioStream(new FileInputStream(song));
+//      AudioData myData = myBackgroundMusic.getData();
+//      myLoop = new ContinuousAudioDataStream(myData);
+//    }
+//    catch(Exception error)
+//    {}
+//    myBackgroundPlayer.start(myLoop);
+//  }
   //music
   public static void main(String[]args) throws InterruptedException
   { 
@@ -931,7 +959,7 @@ public class MallKing extends JPanel
     frame.setVisible(true); 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     //music 
-    startBGMusic();
+//    startBGMusic();
     //music
     while (true) {
       {
@@ -947,7 +975,14 @@ public class MallKing extends JPanel
         {
           m.loading("save.txt", "saveStores.txt", "gridSave.txt");
         }
-        m.repaint(); 
+        m.repaint();
+        if (cash<0)
+        {
+          bankrupt=true;
+          m.paused=true;
+        }
+        //for (
+            
         Thread.sleep(10); 
       }
     }  
